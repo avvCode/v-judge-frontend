@@ -32,16 +32,24 @@
 <script lang="ts" setup>
 import { routes } from "../router/routes";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import checkAccess from "@/access/checkAccess";
 
+const store = useStore();
 const router = useRouter();
+const loginUser = store.state.user.loginUser;
 //展示在菜单的路由数组
-const visibleRoutes = routes.filter((item, index) => {
-  if (item.meta?.hideInMenu) {
-    return false;
-  }
-  return true;
+const visibleRoutes = computed(() => {
+  return routes.filter((item, index) => {
+    if (item.meta?.hideInMenu) {
+      return false;
+    }
+    if (!checkAccess(loginUser, item?.meta?.access as string)) {
+      return false;
+    }
+    return true;
+  });
 });
 
 // 默认主页
@@ -51,8 +59,6 @@ const selectedKeys = ref(["/"]);
 router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];
 });
-
-const store = useStore();
 
 const doMenuClick = (key: string) => {
   router.push({
