@@ -28,7 +28,6 @@
 <style scoped>
 #userLayout {
   text-align: center;
-  //background: url("@/assets/loginBG.jpg") 0% 0% / 100% 100%;
   background: white;
 }
 

@@ -32,7 +32,7 @@
 }
 
 #basicLayout .content {
-  background: linear-gradient(to right, #bbb, #fff);
+  background: linear-gradient(to right, #fefefe, #fff);
   margin-bottom: 16px;
   padding: 20px;
 }
@@ -40,7 +40,7 @@
 #basicLayout .footer {
   background: #efefef;
   padding: 16px;
-  position: static;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
