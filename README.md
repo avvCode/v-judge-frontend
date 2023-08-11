@@ -1,4 +1,4 @@
-# yuoj-frontend
+# v-judge-frontend
 
 ## Project setup
 ```
