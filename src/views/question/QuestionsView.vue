@@ -43,7 +43,7 @@
         {{
           `${
             record.acceptedNum !== 0
-              ? record.acceptedNum / record.acceptedNum
+              ? (record.acceptedNum / record.submitNum) * 100
               : "0"
           }% 
         (${record.acceptedNum} / ${record.submitNum})`
@@ -126,6 +126,10 @@ const columns = [
   {
     title: "创建时间",
     slotName: "createTime",
+  },
+  {
+    title: "难度",
+    slotName: "rate",
   },
   {
     slotName: "optional",
