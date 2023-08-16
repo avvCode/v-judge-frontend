@@ -34,13 +34,17 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/",
-    name: "主页",
     component: QuestionsView,
   },
   {
     path: "/questions",
-    name: "浏览题目",
+    name: "题目",
     component: QuestionsView,
+  },
+  {
+    path: "/question/contest",
+    name: "竞赛中心",
+    component: AddQuestionView,
   },
   {
     path: "/view/question/:id",
@@ -94,7 +98,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin",
-    name: "管理员可见",
+    name: "管理中心",
     component: AdminView,
     meta: {
       access: ACCESS_ENUM.ADMIN,

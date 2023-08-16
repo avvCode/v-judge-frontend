@@ -22,9 +22,13 @@
       </a-menu>
     </a-col>
     <a-col flex="100px">
-      <div>
-        {{ store.state.user?.loginUser?.userName ?? "未登录" }}
+      <div v-if="store.state.user?.loginUser">
+        <a-avatar
+          :image-url="store.state.user?.loginUser?.userAvatar"
+        ></a-avatar>
+        {{ store.state.user?.loginUser?.userName }}
       </div>
+      <div v-else>未登录</div>
     </a-col>
   </a-row>
 </template>

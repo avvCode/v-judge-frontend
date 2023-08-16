@@ -28,7 +28,7 @@
 <style scoped>
 #userLayout {
   text-align: center;
-  background: white;
+  background: url("@/assets/Bg.png");
 }
 
 #userLayout .header {
