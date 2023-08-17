@@ -7,8 +7,31 @@
             <a-card v-if="question" :title="question.title">
               <a-descriptions
                 title="判题条件"
-                :column="{ xs: 1, md: 2, lg: 3 }"
+                :column="{ xs: 1, md: 2, lg: 6 }"
               >
+                <a-descriptions-item :label="label"> </a-descriptions-item>
+                <a-descriptions-item>
+                  <icon-thumb-up
+                    size="15"
+                    @click="
+                      (ev) => {
+                        console.log('点赞');
+                      }
+                    "
+                  />
+                  {{ question?.thumbNum }}
+                </a-descriptions-item>
+                <a-descriptions-item>
+                  <icon-star
+                    size="15"
+                    @click="
+                      (ev) => {
+                        console.log('收藏');
+                      }
+                    "
+                  />
+                  {{ question?.favourNum }}
+                </a-descriptions-item>
                 <a-descriptions-item label="时间限制">
                   {{ question?.judgeConfig.timeLimit ?? 0 }}
                 </a-descriptions-item>
@@ -34,7 +57,7 @@
             </a-card>
           </a-tab-pane>
           <a-tab-pane key="comment" title="评论"> 评论区 </a-tab-pane>
-          <a-tab-pane key="answer" title="答案"> 答案区 </a-tab-pane>
+          <a-tab-pane key="answer" title="题解"> 题解区 </a-tab-pane>
         </a-tabs>
       </a-col>
       <a-col :md="12" :xs="24">
@@ -88,7 +111,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   id: () => "",
 });
-
+const label = ref();
+const style = ref();
 const question = ref<QuestionVO>();
 
 const loadData = async () => {
@@ -97,6 +121,16 @@ const loadData = async () => {
   );
   if (res.code === 0) {
     question.value = res.data;
+    if (res.data?.rate === 0) {
+      label.value = "简单";
+      style.value = { color: "green" };
+    } else if (res.data?.rate == 1) {
+      label.value = "中等";
+      style.value = { color: "yellow" };
+    } else if (res.data?.rate === 2) {
+      label.value = "困难";
+      style.value = { color: "red" };
+    }
   } else {
     message.error("加载失败，" + res.message);
   }

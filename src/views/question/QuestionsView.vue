@@ -57,6 +57,9 @@
         (${record.acceptedNum} / ${record.submitNum})`
         }}
       </template>
+      <template #createUser="{ record }">
+        {{ record.userVO.userName }}
+      </template>
       <template #createTime="{ record }">
         {{ moment(record.createTime).format("YYYY-MM-DD") }}
       </template>
@@ -152,6 +155,10 @@ const columns = [
   {
     title: "通过率",
     slotName: "acceptedRate",
+  },
+  {
+    title: "创建人",
+    slotName: "createUser",
   },
   {
     title: "创建时间",

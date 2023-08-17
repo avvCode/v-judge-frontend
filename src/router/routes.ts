@@ -10,6 +10,8 @@ import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
+import UserCenterView from "@/views/user/UserCenterView.vue";
+import QuestionTestView from "@/views/question/QuestionContestView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -33,6 +35,14 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/center",
+    component: UserCenterView,
+    meta: {
+      hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+    },
+  },
+  {
     path: "/",
     component: QuestionsView,
   },
@@ -44,7 +54,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/question/contest",
     name: "竞赛中心",
-    component: AddQuestionView,
+    component: QuestionTestView,
   },
   {
     path: "/view/question/:id",

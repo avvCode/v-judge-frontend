@@ -11,15 +11,17 @@
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
-        CopyWrite By
-        <a
-          href="https://github.com/avvCode"
-          style="text-decoration: none"
-          target="_blank"
-        >
-          <icon-github />
-          avvCode
-        </a>
+        <span style="color: #ffffff">
+          CopyWrite By
+          <a
+            href="https://github.com/avvCode"
+            style="text-decoration: none; color: white"
+            target="_blank"
+          >
+            <icon-github />
+            avvCode
+          </a>
+        </span>
       </a-layout-footer>
     </a-layout>
   </div>
@@ -34,6 +36,7 @@
 #userLayout .header {
   margin-bottom: 16px;
   box-shadow: #eee 1px 1px 5px;
+  background-color: white;
 }
 
 #userLayout .content {
@@ -42,7 +45,7 @@
 }
 
 #userLayout .footer {
-  background: #efefef;
+  background: rgba(14, 14, 14, 0.85);
   padding: 16px;
   position: static;
   bottom: 0;

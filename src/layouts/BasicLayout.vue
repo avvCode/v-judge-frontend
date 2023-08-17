@@ -29,13 +29,12 @@
 }
 
 #basicLayout .header {
-  margin-bottom: 16px;
   box-shadow: #eee 1px 1px 5px;
+  margin-bottom: 10px;
 }
 
 #basicLayout .content {
-  background: linear-gradient(to right, #fefefe, #fff);
-  margin-bottom: 16px;
+  background: #fcfcfc;
   padding: 20px;
 }
 
