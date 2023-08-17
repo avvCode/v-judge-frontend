@@ -22,13 +22,19 @@
       </a-menu>
     </a-col>
     <a-col flex="100px">
-      <div v-if="store.state.user?.loginUser">
-        <a-avatar
-          :image-url="store.state.user?.loginUser?.userAvatar"
-        ></a-avatar>
-        {{ store.state.user?.loginUser?.userName }}
+      <div v-if="store.state.user?.loginUser.userName === '未登录'">
+        <a-avatar> 未登录 </a-avatar>
       </div>
-      <div v-else>未登录</div>
+      <div v-else>
+        <a-dropdown trigger="hover">
+          <a-avatar :image-url="store.state.user?.loginUser?.userAvatar">
+          </a-avatar>
+          <template #content>
+            <a-doption @click="toMyCenter">个人中心</a-doption>
+            <a-doption @click="logout">退出登录</a-doption>
+          </template>
+        </a-dropdown>
+      </div>
     </a-col>
   </a-row>
 </template>
@@ -81,6 +87,17 @@ const doMenuClick = (key: string) => {
   router.push({
     path: key,
   });
+};
+
+const toMyCenter = () => {
+  console.log("个人中心");
+  router.push({
+    path: "/center",
+  });
+};
+
+const logout = () => {
+  console.log("退出登录");
 };
 </script>
 

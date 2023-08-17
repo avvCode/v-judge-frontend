@@ -2,7 +2,11 @@
   <div id="questionsView">
     <a-form :model="searchParams" :layout="'inline'">
       <a-form-item field="title" label="名称" style="min-width: 240px">
-        <a-input v-model="searchParams.title" placeholder="请输入名称" />
+        <a-input
+          v-model="searchParams.title"
+          placeholder="请输入名称"
+          allow-clear
+        />
       </a-form-item>
       <a-form-item field="tags" label="标签" style="min-width: 240px">
         <a-input-tag v-model="searchParams.tags" placeholder="请输入标签" />
@@ -109,7 +113,6 @@ const loadData = async () => {
     res = await QuestionControllerService.listQuestionVoByPageUsingPost(
       queryRequest
     );
-    console.log(rate);
   } else {
     res = await QuestionControllerService.listQuestionVoByPageUsingPost(
       searchParams.value
