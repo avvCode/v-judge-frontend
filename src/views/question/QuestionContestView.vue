@@ -1,27 +1,63 @@
 <template>
   <div id="questionContestView">
     <a-row :gutter="20" :style="{ marginBottom: '20px' }">
+      <a-card :bordered="true" style="width: 80%; margin: 0 auto"
+        >Contest</a-card
+      >
       <a-card
-        title="小白坐牢大赛"
         :bordered="true"
-        style="width: 80%; margin: 0 auto"
+        style="width: 80%; margin: 5px auto"
+        v-for="item in dataList"
+        :key="item.id"
+        :title="item.title"
       >
         <a-row :gutter="20">
           <a-col span="0">
             <icon-trophy size="50" />
           </a-col>
-          <a-col span="6">
-            <icon-calendar-clock /> 2023-08-17 13:00
+          <a-col span="8">
+            <icon-calendar-clock size="15" /> {{ item.startTime }} -
+            {{ item.endTime }}
             <a-divider size="0" />
-            <icon-schedule /> 5hour
+            <icon-schedule size="15" />
+            {{ moment(item.endTime).diff(moment(item.startTime), "hours") }}
+            hour
           </a-col>
-          <a-col span="16" style="text-align: right">
-            <div>
-              <icon-lock size="50" />
-            </div>
-            <div style="display: none">
-              <icon-unlock />
-            </div>
+          <a-col span="1">
+            <a-countdown
+              title="距离比赛开始"
+              :value="item.startTime"
+              :now="Date.now()"
+              format="D 天 H 时 m 分 s 秒"
+              value-style="color:
+            #42b983;font-size: 15px"
+              v-if="
+                moment(Date.now()).diff(moment(item.startTime), 'seconds') <= 0
+              "
+            />
+          </a-col>
+          <a-col span="10" style="text-align: right">
+            <a-divider size="0" />
+            <a-button
+              v-if="
+                moment(Date.now()).diff(moment(item.startTime), 'seconds') <= 0
+              "
+              disabled
+              >参加比赛</a-button
+            >
+            <a-button @click="doJoin" v-else type="primary" status="success"
+              >参加比赛</a-button
+            >
+          </a-col>
+          <a-col span="2" style="text-align: right">
+            <icon-lock
+              size="50"
+              v-if="moment(item.endTime).diff(moment(item.startTime)) !== 0"
+            />
+            <icon-unlock
+              size="50"
+              v-if="moment(item.endTime).diff(moment(item.startTime)) === 0"
+            />
           </a-col>
         </a-row>
       </a-card>
@@ -32,6 +68,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import {
+  ContestControllerService,
   Page_Question_,
   Question,
   QuestionControllerService,
@@ -41,10 +78,7 @@ import * as querystring from "querystring";
 import { useRouter } from "vue-router";
 import { sendRequest } from "../../../generated/core/request";
 import { useStore } from "vuex";
-
-const show = ref(true);
-const tableRef = ref();
-const store = useStore();
+import moment, { now } from "moment/moment";
 
 const dataList = ref([]);
 const total = ref(0);
@@ -54,7 +88,7 @@ const searchParams = ref({
 });
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listQuestionByPageUsingPost(
+  const res = await ContestControllerService.listContestVoByPageUsingPost(
     searchParams.value
   );
   if (res.code === 0) {
@@ -71,80 +105,8 @@ onMounted(() => {
   loadData();
 });
 
-// {id: "1", title: "A+ D", content: "新的题目内容", tags: "["二叉树"]", answer: "新的答案", submitNum: 0,…}
-
-const columns = [
-  {
-    title: "id",
-    dataIndex: "id",
-  },
-  {
-    title: "标题",
-    dataIndex: "title",
-  },
-  {
-    title: "内容",
-    dataIndex: "content",
-  },
-  {
-    title: "标签",
-    dataIndex: "tags",
-  },
-  {
-    title: "答案",
-    dataIndex: "answer",
-  },
-  {
-    title: "提交数",
-    dataIndex: "submitNum",
-  },
-  {
-    title: "通过数",
-    dataIndex: "acceptedNum",
-  },
-  {
-    title: "判题配置",
-    dataIndex: "judgeConfig",
-  },
-  {
-    title: "判题用例",
-    dataIndex: "judgeCase",
-  },
-  {
-    title: "用户id",
-    dataIndex: "userId",
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createTime",
-  },
-  {
-    title: "操作",
-    slotName: "optional",
-  },
-];
-
-const doDelete = async (question: Question) => {
-  const res = await QuestionControllerService.deleteQuestionUsingPost({
-    id: question.id,
-  });
-  if (res.code === 0) {
-    message.success("删除成功");
-    await loadData();
-  } else {
-    message.error("删除失败");
-  }
-};
-
-const router = useRouter();
-
-const doUpdate = (question: Question) => {
-  router.push({
-    path: "/update/question",
-    query: {
-      id: question.id,
-    },
-  });
+const doJoin = () => {
+  console.log("参加比赛");
 };
 </script>
 

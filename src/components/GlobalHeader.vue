@@ -19,6 +19,14 @@
         <a-menu-item v-for="item in visibleRoutes" :key="item.path">
           {{ item.name }}
         </a-menu-item>
+        <a-sub-menu>
+          <template #title>
+            {{ managerItem.name }}
+          </template>
+          <a-menu-item v-for="item in managerItem.children" :key="item.path">
+            {{ item.name }}
+          </a-menu-item>
+        </a-sub-menu>
       </a-menu>
     </a-col>
     <a-col flex="100px">
@@ -49,11 +57,15 @@ import ACCESS_ENUM from "@/access/accessEnum";
 
 const router = useRouter();
 const store = useStore();
-
+const managerItem = ref({});
 // 展示在菜单的路由数组
 const visibleRoutes = computed(() => {
   return routes.filter((item, index) => {
     if (item.meta?.hideInMenu) {
+      return false;
+    }
+    if (item.name === "管理中心") {
+      managerItem.value = item;
       return false;
     }
     // 根据权限过滤菜单

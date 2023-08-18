@@ -11,8 +11,11 @@ export type QuestionVO = {
     content?: string;
     createTime?: string;
     favourNum?: number;
+    hasFavour?: boolean;
+    hasThumb?: boolean;
     id?: number;
     judgeConfig?: JudgeConfig;
+    rate?: number;
     submitNum?: number;
     tags?: Array<string>;
     thumbNum?: number;
@@ -20,5 +23,4 @@ export type QuestionVO = {
     updateTime?: string;
     userId?: number;
     userVO?: UserVO;
-    rate?: number;
 };
