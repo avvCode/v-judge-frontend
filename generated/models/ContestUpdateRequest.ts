@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 export type ContestUpdateRequest = {
+    description?: string;
     endTime?: string;
     id?: number;
     startTime?: string;

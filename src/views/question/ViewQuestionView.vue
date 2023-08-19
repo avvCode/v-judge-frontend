@@ -11,25 +11,13 @@
               >
                 <a-descriptions-item :label="label"> </a-descriptions-item>
                 <a-descriptions-item>
-                  <icon-thumb-up
-                    size="15"
-                    @click="
-                      (ev) => {
-                        console.log('点赞');
-                      }
-                    "
-                  />
+                  <icon-thumb-up size="15" @click="doThumb" v-if="!isThumb" />
+                  <icon-thumb-up-fill size="15" @click="doThumb" v-else />
                   {{ question?.thumbNum }}
                 </a-descriptions-item>
                 <a-descriptions-item>
-                  <icon-star
-                    size="15"
-                    @click="
-                      (ev) => {
-                        console.log('收藏');
-                      }
-                    "
-                  />
+                  <icon-star size="15" @click="doFavour" v-if="!isFavour" />
+                  <icon-star-fill size="15" @click="doFavour" v-else />
                   {{ question?.favourNum }}
                 </a-descriptions-item>
                 <a-descriptions-item label="时间限制">
@@ -96,8 +84,11 @@
 import { onMounted, withDefaults, defineProps, ref } from "vue";
 import {
   QuestionControllerService,
+  QuestionFavourControllerService,
   QuestionSubmitAddRequest,
   QuestionSubmitControllerService,
+  QuestionThumbAddRequest,
+  QuestionThumbControllerService,
   QuestionVO,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
@@ -114,13 +105,16 @@ const props = withDefaults(defineProps<Props>(), {
 const label = ref();
 const style = ref();
 const question = ref<QuestionVO>();
-
+const isThumb = ref<boolean>(false);
+const isFavour = ref<boolean>(false);
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
     props.id as any
   );
   if (res.code === 0) {
     question.value = res.data;
+    isThumb.value = question.value?.hasThumb as boolean;
+    isFavour.value = question.value?.hasFavour as boolean;
     if (res.data?.rate === 0) {
       label.value = "简单";
       style.value = { color: "green" };
@@ -165,6 +159,28 @@ const doSubmit = async () => {
 
 const changeCode = (value: string) => {
   form.value.code = value;
+};
+const doThumb = async () => {
+  console.log("点赞");
+  const res = await QuestionThumbControllerService.doThumbUsingPost({
+    questionId: question.value?.id,
+  });
+  if (res.code === 0) {
+    loadData();
+  } else {
+    message.error("点赞失败");
+  }
+};
+const doFavour = async () => {
+  console.log("点赞");
+  const res = await QuestionFavourControllerService.doQuestionFavourUsingPost({
+    questionId: question.value?.id,
+  });
+  if (res.code === 0) {
+    loadData();
+  } else {
+    message.error("收藏失败");
+  }
 };
 </script>
 

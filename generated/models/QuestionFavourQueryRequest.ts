@@ -3,12 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { PostQueryRequest } from './PostQueryRequest';
+import type { QuestionQueryRequest } from './QuestionQueryRequest';
 
-export type PostFavourQueryRequest = {
+export type QuestionFavourQueryRequest = {
     current?: number;
     pageSize?: number;
-    postQueryRequest?: PostQueryRequest;
+    questionQueryRequest?: QuestionQueryRequest;
     sortField?: string;
     sortOrder?: string;
     userId?: number;

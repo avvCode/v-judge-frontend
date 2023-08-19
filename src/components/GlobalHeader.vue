@@ -39,6 +39,8 @@
           </a-avatar>
           <template #content>
             <a-doption @click="toMyCenter">个人中心</a-doption>
+            <a-doption @click="toMyFavour">收藏列表</a-doption>
+            <a-doption @click="toMyContestRecord">参赛记录</a-doption>
             <a-doption @click="logout">退出登录</a-doption>
           </template>
         </a-dropdown>
@@ -50,14 +52,16 @@
 <script setup lang="ts">
 import { routes } from "../router/routes";
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "@/access/checkAccess";
 import ACCESS_ENUM from "@/access/accessEnum";
+import { UserControllerService } from "../../generated";
 
 const router = useRouter();
 const store = useStore();
 const managerItem = ref({});
+
 // 展示在菜单的路由数组
 const visibleRoutes = computed(() => {
   return routes.filter((item, index) => {
@@ -86,8 +90,6 @@ router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];
 });
 
-console.log();
-
 setTimeout(() => {
   store.dispatch("user/getLoginUser", {
     userName: "vv",
@@ -107,9 +109,26 @@ const toMyCenter = () => {
     path: "/center",
   });
 };
+const toMyFavour = () => {
+  console.log("收藏列表");
+  router.push({
+    path: "/favour/questions",
+    replace: true,
+  });
+};
 
-const logout = () => {
-  console.log("退出登录");
+const toMyContestRecord = () => {
+  console.log("参赛记录");
+};
+
+const logout = async () => {
+  await UserControllerService.userLogoutUsingPost();
+  store.state.user.loginUser = {
+    userName: "未登录",
+  };
+  router.push({
+    path: "/",
+  });
 };
 </script>
 

@@ -14,6 +14,8 @@ import UserCenterView from "@/views/user/UserCenterView.vue";
 import QuestionTestView from "@/views/question/QuestionContestView.vue";
 import QuestionContestView from "@/views/question/QuestionContestView.vue";
 import ManageQuestionContestView from "@/views/question/ManageQuestionContestView.vue";
+import FavourQuestionsView from "@/views/question/FavourQuestionsView.vue";
+import ManageUserView from "@/views/user/ManageUserView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -54,6 +56,15 @@ export const routes: Array<RouteRecordRaw> = [
     component: QuestionsView,
   },
   {
+    path: "/favour/questions",
+    name: "收藏列表",
+    component: FavourQuestionsView,
+    meta: {
+      hideInMenu: true,
+      // access: ACCESS_ENUM.USER,
+    },
+  },
+  {
     path: "/question/contest",
     name: "竞赛中心",
     component: QuestionContestView,
@@ -92,14 +103,6 @@ export const routes: Array<RouteRecordRaw> = [
     //   access: ACCESS_ENUM.ADMIN,
     // },
   },
-  // {
-  //   path: "/hide",
-  //   name: "隐藏页面",
-  //   component: HomeView,
-  //   meta: {
-  //     hideInMenu: true,
-  //   },
-  // },
   {
     path: "/noAuth",
     name: "无权限",
@@ -115,7 +118,7 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: "/admin/user",
         name: "管理用户",
-        component: UserLoginView,
+        component: ManageUserView,
       },
       {
         path: "/admin/question",
@@ -125,7 +128,18 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: "/admin/contest",
         name: "管理比赛",
-        component: ManageQuestionContestView,
+        children: [
+          {
+            path: "/admin/contest/create",
+            name: "创建比赛",
+            component: ManageQuestionContestView,
+          },
+          {
+            path: "/admin/contest/list",
+            name: "比赛列表",
+            component: ManageQuestionContestView,
+          },
+        ],
       },
     ],
   },

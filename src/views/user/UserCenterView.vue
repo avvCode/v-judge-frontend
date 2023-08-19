@@ -18,19 +18,9 @@
           <div style="margin-top: 20px">
             用户名：{{ store.state.user.loginUser.userName }}
           </div>
-          <div style="margin-top: 20px">做题数量：1</div>
-        </a-card>
-        <a-divider size="0" />
-        <a-card title="个人题单" :bordered="true" :style="{ width: '100%' }">
-          <a-list>
-            <a-list-item>Beijing Bytedance Technology Co., Ltd.</a-list-item>
-            <a-list-item>Bytedance Technology Co., Ltd.</a-list-item>
-            <a-list-item>Beijing Toutiao Technology Co., Ltd.</a-list-item>
-            <a-list-item>Beijing Volcengine Technology Co., Ltd.</a-list-item>
-            <a-list-item
-              >China Beijing Bytedance Technology Co., Ltd.</a-list-item
-            >
-          </a-list>
+          <div style="margin-top: 20px">
+            做题数量：{{ store.state.user.loginUser.acNum }}
+          </div>
         </a-card>
       </a-col>
       <a-col :span="18">
@@ -170,6 +160,8 @@ const searchParams = ref({
   pageSize: 10,
   current: 1,
   userId: store.state.user.loginUser.userId,
+  sortField: "createTime",
+  sortOrder: "descend",
 });
 </script>
 

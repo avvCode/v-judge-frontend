@@ -45,19 +45,31 @@
               disabled
               >参加比赛</a-button
             >
-            <a-button @click="doJoin" v-else type="primary" status="success"
+            <a-button
+              @click="doJoin"
+              v-else-if="
+                moment(Date.now()).diff(moment(item.startTime), 'seconds') >
+                  0 &&
+                moment(Date.now()).diff(moment(item.endTime), 'seconds') <= 0
+              "
+              type="primary"
+              status="success"
               >参加比赛</a-button
+            >
+            <a-button @click="doJoin" v-else type="primary" disabled
+              >比赛结束</a-button
             >
           </a-col>
           <a-col span="2" style="text-align: right">
-            <icon-lock
-              size="50"
-              v-if="moment(item.endTime).diff(moment(item.startTime)) !== 0"
-            />
             <icon-unlock
               size="50"
-              v-if="moment(item.endTime).diff(moment(item.startTime)) === 0"
+              v-if="
+                moment(Date.now()).diff(moment(item.startTime), 'seconds') >
+                  0 &&
+                moment(Date.now()).diff(moment(item.endTime), 'seconds') <= 0
+              "
             />
+            <icon-lock size="50" v-else />
           </a-col>
         </a-row>
       </a-card>
