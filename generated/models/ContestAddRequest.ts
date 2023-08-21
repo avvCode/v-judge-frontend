@@ -7,6 +7,7 @@ export type ContestAddRequest = {
     description?: string;
     endTime?: string;
     startTime?: string;
+    status?: number;
     title?: string;
     userId?: number;
 };

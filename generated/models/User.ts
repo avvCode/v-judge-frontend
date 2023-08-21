@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 export type User = {
+    acNum?: number;
     createTime?: string;
     id?: number;
     isDelete?: number;

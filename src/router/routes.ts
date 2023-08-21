@@ -1,5 +1,3 @@
-import HomeView from "@/views/HomeView.vue";
-import AdminView from "@/views/AdminView.vue";
 import NoAuthView from "@/views/NoAuthView.vue";
 import ACCESS_ENUM from "@/access/accessEnum";
 import { RouteRecordRaw } from "vue-router";
@@ -11,12 +9,13 @@ import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
 import UserCenterView from "@/views/user/UserCenterView.vue";
-import QuestionTestView from "@/views/question/QuestionContestView.vue";
 import QuestionContestView from "@/views/question/QuestionContestView.vue";
-import ManageQuestionContestView from "@/views/question/ManageQuestionContestView.vue";
 import FavourQuestionsView from "@/views/question/FavourQuestionsView.vue";
 import ManageUserView from "@/views/user/ManageUserView.vue";
-
+import CreateQuestionContestView from "@/views/question/CreateQuestionContestView.vue";
+import ManageQuestionContestView from "@/views/question/ManageQuestionContestView.vue";
+import UpdateQuestionContestView from "@/views/question/UpdateQuestionContestView.vue";
+import AddContestQuestionView from "@/views/question/AddContestQuestionView.vue";
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/user",
@@ -97,7 +96,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/manage/question/",
-    name: "管理题目",
+    name: "我的题目",
     component: ManageQuestionView,
     // meta: {
     //   access: ACCESS_ENUM.ADMIN,
@@ -112,8 +111,9 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/admin",
+    path: "/admin/user",
     name: "管理中心",
+    props: true,
     children: [
       {
         path: "/admin/user",
@@ -132,7 +132,25 @@ export const routes: Array<RouteRecordRaw> = [
           {
             path: "/admin/contest/create",
             name: "创建比赛",
-            component: ManageQuestionContestView,
+            component: CreateQuestionContestView,
+          },
+          {
+            path: "/admin/contest/edit",
+            name: "修改比赛信息",
+            component: UpdateQuestionContestView,
+            props: true,
+            meta: {
+              hideInMenu: true,
+            },
+          },
+          {
+            path: "/admin/contest/add/question",
+            name: "比赛新增题目",
+            component: AddContestQuestionView,
+            props: true,
+            meta: {
+              hideInMenu: true,
+            },
           },
           {
             path: "/admin/contest/list",
@@ -142,6 +160,9 @@ export const routes: Array<RouteRecordRaw> = [
         ],
       },
     ],
+    meta: {
+      type: "admin",
+    },
   },
   {
     path: "/about",

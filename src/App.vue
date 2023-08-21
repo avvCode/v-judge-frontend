@@ -3,6 +3,9 @@
     <template v-if="route.path.startsWith('/user')">
       <router-view />
     </template>
+    <template v-if="route.path.startsWith('/admin')">
+      <AdminLayout />
+    </template>
     <template v-else>
       <BasicLayout />
     </template>

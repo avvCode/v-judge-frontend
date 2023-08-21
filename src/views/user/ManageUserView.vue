@@ -29,7 +29,27 @@
       </template>
       <template #optional="{ record }">
         <a-space>
-          <a-button type="primary" @click="doUpdate(record)"> 修改</a-button>
+          <a-button type="primary" @click="handleClick"> 修改</a-button>
+          <a-modal
+            v-model:visible="visible"
+            title="Modal Form"
+            @cancel="handleCancel"
+            @before-ok="handleBeforeOk"
+          >
+            <a-form :model="form">
+              <a-form-item field="name" label="Name">
+                <a-input v-model="form.name" />
+              </a-form-item>
+              <a-form-item field="post" label="Post">
+                <a-select v-model="form.post">
+                  <a-option value="post1">Post1</a-option>
+                  <a-option value="post2">Post2</a-option>
+                  <a-option value="post3">Post3</a-option>
+                  <a-option value="post4">Post4</a-option>
+                </a-select>
+              </a-form-item>
+            </a-form>
+          </a-modal>
           <a-button status="danger" @click="doDelete(record)">删除</a-button>
         </a-space>
       </template>
@@ -38,11 +58,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import {
   Page_Question_,
   Question,
   QuestionControllerService,
+  User,
   UserControllerService,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
@@ -50,6 +71,27 @@ import * as querystring from "querystring";
 import { useRouter } from "vue-router";
 import { sendRequest } from "../../../generated/core/request";
 import moment from "moment";
+
+const visible = ref(false);
+const form = reactive({
+  name: "",
+  post: "",
+});
+
+const handleClick = () => {
+  visible.value = true;
+};
+const handleBeforeOk = (done) => {
+  console.log(form);
+  window.setTimeout(() => {
+    done();
+    // prevent close
+    // done(false)
+  }, 3000);
+};
+const handleCancel = () => {
+  visible.value = false;
+};
 
 const show = ref(true);
 const tableRef = ref();
@@ -116,9 +158,9 @@ const columns = [
   },
 ];
 
-const doDelete = async (question: Question) => {
-  const res = await QuestionControllerService.deleteQuestionUsingPost({
-    id: question.id,
+const doDelete = async (user: User) => {
+  const res = await UserControllerService.deleteUserUsingPost({
+    id: user.id,
   });
   if (res.code === 0) {
     message.success("删除成功");

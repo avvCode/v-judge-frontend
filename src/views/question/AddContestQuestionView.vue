@@ -1,19 +1,28 @@
 <template>
-  <div id="addQuestionView">
+  <div id="addContestQuestionView">
     <h2>创建题目</h2>
     <a-form :model="form" label-align="left">
       <a-form-item field="title" label="标题">
-        <a-input v-model="form.title" placeholder="请输入标题" />
+        <a-input
+          v-model="form.title"
+          placeholder="请输入标题"
+          allow-clear
+          style="width: 600px"
+        />
       </a-form-item>
       <a-form-item field="tags" label="标签">
-        <a-input-tag v-model="form.tags" placeholder="请输入标签" allow-clear />
+        <a-input-tag
+          v-model="form.tags"
+          placeholder="请输入标签"
+          allow-clear
+          style="width: 600px"
+        />
       </a-form-item>
       <a-form-item field="rate" label="难度">
-        <a-select>
-          <a-option>Beijing</a-option>
-          <a-option>Shanghai</a-option>
-          <a-option>Guangzhou</a-option>
-          <a-option disabled>Disabled</a-option>
+        <a-select allow-clear style="width: 600px" placeholder="请选择难度">
+          <a-option>Easy</a-option>
+          <a-option>Mid</a-option>
+          <a-option>Hard</a-option>
         </a-select>
       </a-form-item>
       <a-form-item field="content" label="题目内容">

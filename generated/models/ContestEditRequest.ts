@@ -8,5 +8,6 @@ export type ContestEditRequest = {
     endTime?: string;
     id?: number;
     startTime?: string;
+    status?: number;
     title?: string;
 };

@@ -1,5 +1,5 @@
 <template>
-  <a-row id="globalHeader" :wrap="false" align="center">
+  <a-row id="adminHeader" :wrap="false" align="center">
     <a-col flex="auto">
       <a-menu
         :selected-keys="selectedKeys"
@@ -16,9 +16,20 @@
             <div class="title">V-Judge</div>
           </div>
         </a-menu-item>
-        <a-menu-item v-for="item in visibleRoutes" :key="item.path">
-          {{ item.name }}
+        <a-menu-item :key="visibleRoutes[0].children?.[0].path">
+          {{ visibleRoutes[0].children?.[0].name }}
         </a-menu-item>
+        <a-menu-item :key="visibleRoutes[0].children?.[1].path">
+          {{ visibleRoutes[0].children?.[1].name }}
+        </a-menu-item>
+        <a-sub-menu>
+          <template #title>
+            {{ visibleRoutes[0].children?.[2].name }}
+          </template>
+          <a-menu-item v-for="item in contestItem" :key="item?.path">
+            {{ item?.name }}
+          </a-menu-item>
+        </a-sub-menu>
       </a-menu>
     </a-col>
     <a-col flex="100px">
@@ -52,7 +63,6 @@ import { UserControllerService } from "../../generated";
 
 const router = useRouter();
 const store = useStore();
-const managerItem = ref({});
 
 // 展示在菜单的路由数组
 const visibleRoutes = computed(() => {
@@ -60,14 +70,16 @@ const visibleRoutes = computed(() => {
     if (item.meta?.hideInMenu) {
       return false;
     }
-    // 根据权限过滤菜单
-    if (
-      !checkAccess(store.state.user.loginUser, item?.meta?.access as string)
-    ) {
-      return false;
-    }
-    return true;
+    return item?.meta?.type === "admin";
   });
+});
+
+const contestItem = computed(() => {
+  return visibleRoutes.value[0]?.children?.[2].children?.filter(
+    (contestItem, index) => {
+      return !contestItem.meta?.hideInMenu;
+    }
+  );
 });
 
 // 默认主页
@@ -113,7 +125,6 @@ const logout = async () => {
   await UserControllerService.userLogoutUsingPost();
   store.state.user.loginUser = {
     userName: "未登录",
-    userRole: ACCESS_ENUM.NOT_LOGIN,
   };
   router.push({
     path: "/",
