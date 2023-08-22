@@ -38,27 +38,28 @@
           </a-col>
           <a-col span="10" style="text-align: right">
             <a-divider size="0" />
-            <a-button
-              v-if="
-                moment(Date.now()).diff(moment(item.startTime), 'seconds') <= 0
-              "
-              disabled
-              >参加比赛</a-button
-            >
-            <a-button
-              @click="doJoin"
-              v-else-if="
-                moment(Date.now()).diff(moment(item.startTime), 'seconds') >
-                  0 &&
-                moment(Date.now()).diff(moment(item.endTime), 'seconds') <= 0
-              "
-              type="primary"
-              status="success"
-              >参加比赛</a-button
-            >
-            <a-button @click="doJoin" v-else type="primary" disabled
-              >比赛结束</a-button
-            >
+            <!--            <a-button-->
+            <!--              v-if="-->
+            <!--                moment(Date.now()).diff(moment(item.startTime), 'seconds') <= 0-->
+            <!--              "-->
+            <!--              disabled-->
+            <!--              >参加比赛</a-button-->
+            <!--            >-->
+            <!--            <a-button-->
+            <!--              @click="doJoin"-->
+            <!--              v-else-if="-->
+            <!--                moment(Date.now()).diff(moment(item.startTime), 'seconds') >-->
+            <!--                  0 &&-->
+            <!--                moment(Date.now()).diff(moment(item.endTime), 'seconds') <= 0-->
+            <!--              "-->
+            <!--              type="primary"-->
+            <!--              status="success"-->
+            <!--              >参加比赛</a-button-->
+            <!--            >-->
+            <!--            <a-button @click="doJoin" v-else type="primary" disabled-->
+            <!--              >比赛结束</a-button-->
+            <!--            >-->
+            <a-button @click="doJoin(item.id)">参加比赛</a-button>
           </a-col>
           <a-col span="2" style="text-align: right">
             <icon-unlock
@@ -94,6 +95,7 @@ import moment, { now } from "moment/moment";
 
 const dataList = ref([]);
 const total = ref(0);
+const router = useRouter();
 const searchParams = ref({
   pageSize: 10,
   current: 1,
@@ -117,7 +119,14 @@ onMounted(() => {
   loadData();
 });
 
-const doJoin = () => {
+const doJoin = (id: number) => {
+  router.push({
+    path: "/view/question/contest",
+    query: {
+      contestId: id,
+    },
+    replace: true,
+  });
   console.log("参加比赛");
 };
 </script>

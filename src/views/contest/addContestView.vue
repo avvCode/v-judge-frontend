@@ -1,5 +1,5 @@
 <template>
-  <div id="createQuestionContestView">
+  <div id="addContestView">
     <a-row :gutter="20" :style="{ marginBottom: '20px' }">
       <a-card :bordered="true" style="width: 90%; margin: 0 auto"
         >Create Contest</a-card
@@ -62,36 +62,6 @@
           </a-form-item>
         </a-form>
       </a-card>
-      <a-card
-        :bordered="true"
-        style="width: 90%; margin: 0 auto"
-        title="Question List"
-      >
-        <template #extra>
-          <a-button type="primary" @click="addQuestion(form.id)">
-            <template #icon> <icon-plus /></template>
-          </a-button>
-        </template>
-        <a-table
-          :bordered="false"
-          :ref="tableRef"
-          :columns="columns"
-          :data="dataList"
-          :pagination="{
-            pageSize: searchParams.pageSize,
-            current: searchParams.current,
-            showTotal: true,
-            total,
-          }"
-          @pageChange="
-            (page) => {
-              searchParams.current = page;
-              loadData();
-            }
-          "
-        >
-        </a-table>
-      </a-card>
     </a-row>
   </div>
 </template>
@@ -103,7 +73,6 @@ import { ContestControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
 
-const router = useRouter();
 const contentZIndex = ref(1);
 const answerZIndex = ref(1);
 let form = ref({
@@ -113,15 +82,6 @@ let form = ref({
   startTime: "",
   endTime: "",
 });
-
-const searchParams = ref({
-  title: "",
-  tags: [],
-  pageSize: 10,
-  current: 1,
-});
-
-const total = ref(0);
 const onDescriptionChange = (value: string) => {
   form.value.description = value;
 };
@@ -139,51 +99,9 @@ const doSubmit = async () => {
     message.error("保存失败，" + res.message);
   }
 };
-const addQuestion = (id: number) => {
-  router.push({
-    path: "/admin/contest/add/question",
-    query: {
-      contestId: id,
-    },
-    replace: true,
-  });
-};
-const columns = [
-  {
-    title: "题号",
-    dataIndex: "id",
-  },
-  {
-    title: "题目名称",
-    dataIndex: "title",
-  },
-  {
-    title: "标签",
-    slotName: "tags",
-  },
-  {
-    title: "通过率",
-    slotName: "acceptedRate",
-  },
-  {
-    title: "创建人",
-    slotName: "createUser",
-  },
-  {
-    title: "创建时间",
-    slotName: "createTime",
-  },
-  {
-    title: "难度",
-    slotName: "rate",
-  },
-  {
-    slotName: "optional",
-  },
-];
 </script>
 
 <style scoped>
-#createQuestionContestView {
+#addContestView {
 }
 </style>

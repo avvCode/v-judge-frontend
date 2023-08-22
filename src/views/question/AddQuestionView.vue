@@ -3,17 +3,30 @@
     <h2>创建题目</h2>
     <a-form :model="form" label-align="left">
       <a-form-item field="title" label="标题">
-        <a-input v-model="form.title" placeholder="请输入标题" />
+        <a-input
+          v-model="form.title"
+          placeholder="请输入标题"
+          style="width: 600px"
+        />
       </a-form-item>
       <a-form-item field="tags" label="标签">
-        <a-input-tag v-model="form.tags" placeholder="请输入标签" allow-clear />
+        <a-input-tag
+          v-model="form.tags"
+          placeholder="请输入标签"
+          allow-clear
+          style="width: 600px"
+        />
       </a-form-item>
       <a-form-item field="rate" label="难度">
-        <a-select>
-          <a-option>Beijing</a-option>
-          <a-option>Shanghai</a-option>
-          <a-option>Guangzhou</a-option>
-          <a-option disabled>Disabled</a-option>
+        <a-select
+          allow-clear
+          style="width: 600px"
+          placeholder="请选择难度"
+          @change="rateChange"
+        >
+          <a-option value="0" label="Easy"></a-option>
+          <a-option value="1" label="Mid"></a-option>
+          <a-option value="2" label="Hard"></a-option>
         </a-select>
       </a-form-item>
       <a-form-item field="content" label="题目内容">
@@ -45,7 +58,7 @@
               v-model="form.judgeConfig.timeLimit"
               placeholder="请输入时间限制"
               mode="button"
-              min="0"
+              :min="0"
               size="large"
             />
           </a-form-item>
@@ -54,7 +67,7 @@
               v-model="form.judgeConfig.memoryLimit"
               placeholder="请输入内存限制"
               mode="button"
-              min="0"
+              :min="0"
               size="large"
             />
           </a-form-item>
@@ -63,7 +76,7 @@
               v-model="form.judgeConfig.stackLimit"
               placeholder="请输入堆栈限制"
               mode="button"
-              min="0"
+              :min="0"
               size="large"
             />
           </a-form-item>
@@ -114,7 +127,7 @@
       <div style="margin-top: 16px" />
       <a-form-item>
         <a-button type="primary" style="min-width: 200px" @click="doSubmit"
-          >提交
+          >保存
         </a-button>
       </a-form-item>
     </a-form>
@@ -138,6 +151,7 @@ let form = ref({
   tags: [],
   answer: "",
   content: "",
+  rate: 0,
   judgeConfig: {
     memoryLimit: 1000,
     stackLimit: 1000,
@@ -150,6 +164,10 @@ let form = ref({
     },
   ],
 });
+
+const rateChange = (value: number) => {
+  form.value.rate = value;
+};
 
 /**
  * 根据题目 id 获取老的数据

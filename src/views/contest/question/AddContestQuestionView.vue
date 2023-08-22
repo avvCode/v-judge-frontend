@@ -19,10 +19,15 @@
         />
       </a-form-item>
       <a-form-item field="rate" label="难度">
-        <a-select allow-clear style="width: 600px" placeholder="请选择难度">
-          <a-option>Easy</a-option>
-          <a-option>Mid</a-option>
-          <a-option>Hard</a-option>
+        <a-select
+          allow-clear
+          style="width: 600px"
+          placeholder="请选择难度"
+          @change="rateChange"
+        >
+          <a-option value="0" label="Easy"></a-option>
+          <a-option value="1" label="Mid"></a-option>
+          <a-option value="2" label="Hard"></a-option>
         </a-select>
       </a-form-item>
       <a-form-item field="content" label="题目内容">
@@ -54,7 +59,7 @@
               v-model="form.judgeConfig.timeLimit"
               placeholder="请输入时间限制"
               mode="button"
-              min="0"
+              :min="0"
               size="large"
             />
           </a-form-item>
@@ -63,7 +68,7 @@
               v-model="form.judgeConfig.memoryLimit"
               placeholder="请输入内存限制"
               mode="button"
-              min="0"
+              :min="0"
               size="large"
             />
           </a-form-item>
@@ -72,7 +77,7 @@
               v-model="form.judgeConfig.stackLimit"
               placeholder="请输入堆栈限制"
               mode="button"
-              min="0"
+              :min="0"
               size="large"
             />
           </a-form-item>
@@ -123,7 +128,7 @@
       <div style="margin-top: 16px" />
       <a-form-item>
         <a-button type="primary" style="min-width: 200px" @click="doSubmit"
-          >提交
+          >保存
         </a-button>
       </a-form-item>
     </a-form>
@@ -133,20 +138,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import MdEditor from "@/components/MdEditor.vue";
-import { QuestionControllerService } from "../../../generated";
+import {
+  ContestQuestionControllerService,
+  QuestionControllerService,
+} from "../../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRoute } from "vue-router";
 const contentZIndex = ref(1);
 const answerZIndex = ref(1);
 const route = useRoute();
-// 如果页面地址包含 update，视为更新页面
-const updatePage = route.path.includes("update");
 
 let form = ref({
   title: "",
   tags: [],
   answer: "",
   content: "",
+  rate: 0,
+  contestId: 0,
   judgeConfig: {
     memoryLimit: 1000,
     stackLimit: 1000,
@@ -159,6 +167,10 @@ let form = ref({
     },
   ],
 });
+
+const rateChange = (value: number) => {
+  form.value.rate = value;
+};
 
 /**
  * 根据题目 id 获取老的数据
@@ -208,26 +220,15 @@ onMounted(() => {
 });
 
 const doSubmit = async () => {
-  console.log(form.value);
-  // 区分更新还是创建
-  if (updatePage) {
-    const res = await QuestionControllerService.updateQuestionUsingPost(
+  form.value.contestId = route.query.contestId as any;
+  const res =
+    await ContestQuestionControllerService.addContestQuestionUsingPost(
       form.value
     );
-    if (res.code === 0) {
-      message.success("更新成功");
-    } else {
-      message.error("更新失败，" + res.message);
-    }
+  if (res.code === 0) {
+    message.success("创建成功");
   } else {
-    const res = await QuestionControllerService.addQuestionUsingPost(
-      form.value
-    );
-    if (res.code === 0) {
-      message.success("创建成功");
-    } else {
-      message.error("创建失败，" + res.message);
-    }
+    message.error("创建失败，" + res.message);
   }
 };
 

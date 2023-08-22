@@ -1,18 +1,50 @@
 <template>
   <div id="userCenterView">
     <a-row :gutter="20" :style="{ marginBottom: '20px' }">
-      <a-col :span="6">
+      <a-col :span="5">
         <a-card title="个人资料" :bordered="true" :style="{ width: '100%' }">
-          <div>
-            <a-avatar
-              trigger-type="mask"
-              :size="64"
-              shape="square"
-              :image-url="store.state.user.loginUser.userAvatar"
+          <template #extra>
+            <a-button type="text" @click="edit">
+              <template #icon> <icon-edit /></template>
+            </a-button>
+            <a-modal
+              v-model:visible="visible"
+              title="修改个人信息"
+              @cancel="handleCancel"
+              @ok="ok"
             >
-              <template #trigger-icon>
-                <IconEdit />
-              </template>
+              <a-form :model="form">
+                <a-form-item field="userAvatar" label="用户头像">
+                  <a-upload action="/" @before-upload="beforeUpload">
+                    <template #upload-button>
+                      <a-avatar
+                        trigger-type="mask"
+                        :size="64"
+                        shape="square"
+                        :image-url="img"
+                        @click="toast"
+                      >
+                        <template #trigger-icon>
+                          <IconEdit />
+                        </template>
+                      </a-avatar>
+                    </template>
+                  </a-upload>
+                </a-form-item>
+                <a-form-item field="userName" label="用户名">
+                  <a-input v-model="form.userName" allow-clear />
+                </a-form-item>
+                <a-form-item field="userProfile" label="个人简介">
+                  <a-textarea
+                    v-model="form.userProfile"
+                    allow-clear
+                  ></a-textarea>
+                </a-form-item>
+              </a-form>
+            </a-modal>
+          </template>
+          <div>
+            <a-avatar :size="64" shape="square" :image-url="user.userAvatar">
             </a-avatar>
           </div>
           <div style="margin-top: 20px">
@@ -20,6 +52,14 @@
           </div>
           <div style="margin-top: 20px">
             做题数量：{{ store.state.user.loginUser.acNum }}
+          </div>
+          <div style="margin-top: 20px">
+            个人简介：{{ store.state.user.loginUser.userProfile ?? "暂无" }}
+          </div>
+          <div style="margin-top: 20px">
+            注册时间：{{
+              moment(store.state.user.loginUser.createTime).format("YYYY-MM-DD")
+            }}
           </div>
         </a-card>
       </a-col>
@@ -37,7 +77,7 @@
               pageSize: searchParams.pageSize,
               current: searchParams.current,
               showTotal: true,
-              total,
+              total: total,
             }"
             @pageChange="
               (page) => {
@@ -45,7 +85,7 @@
                 getMySubmit();
               }
             "
-            bordered="false"
+            :bordered="false"
           >
             <template #id="{ record }">
               {{ record.questionVO.id }}
@@ -105,10 +145,16 @@
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { onMounted, ref } from "vue";
-import { QuestionSubmitControllerService } from "../../../generated";
+import { onMounted, reactive, ref } from "vue";
+import {
+  QuestionSubmitControllerService,
+  UploadControllerService,
+  UserControllerService,
+} from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import moment from "moment/moment";
+import { FileItem } from "@arco-design/web-vue";
+import ACCESS_ENUM from "@/access/accessEnum";
 const tableRef = ref();
 const store = useStore();
 const columns = [
@@ -139,9 +185,11 @@ const columns = [
 ];
 onMounted(() => {
   getMySubmit();
+  getUser();
 });
 const dataList = ref([]);
-const total = ref();
+const total = ref(0);
+const user = ref({});
 const getMySubmit = async () => {
   const res =
     await QuestionSubmitControllerService.listQuestionSubmitByPageUsingPost(
@@ -154,6 +202,17 @@ const getMySubmit = async () => {
     message.error("加载失败，" + res.message);
   }
 };
+const getUser = async () => {
+  const res = await UserControllerService.getLoginUserUsingGet();
+  if (res.code === 0) {
+    user.value = res.data as any;
+    form.value = res.data as any;
+    img.value = form.value.userAvatar;
+  } else {
+    message.error("加载失败，" + res.message);
+  }
+};
+
 const searchParams = ref({
   title: "",
   tags: [],
@@ -163,6 +222,52 @@ const searchParams = ref({
   sortField: "createTime",
   sortOrder: "descend",
 });
+const edit = () => {
+  visible.value = true;
+};
+
+const visible = ref(false);
+const form = ref({
+  userName: "",
+  userProfile: "",
+  userAvatar: "",
+});
+
+const ok = async () => {
+  if (img.value !== form.value.userAvatar) {
+    const strings = form.value.userAvatar.split("/");
+    await UploadControllerService.delUserAvatarUsingPost(
+      strings[strings.length - 1]
+    );
+    form.value.userAvatar = img.value;
+  }
+  const res = await UserControllerService.updateMyUserUsingPost(form.value);
+  if (res.code === 0) {
+    message.success("修改成功");
+    await store.dispatch("user/getLoginUser");
+  } else {
+    message.error("图片上传失败，" + res.message);
+  }
+};
+const handleCancel = async () => {
+  if (img.value !== form.value.userAvatar) {
+    await UploadControllerService.delUserAvatarUsingPost(img.value);
+  }
+  visible.value = false;
+};
+const toast = () => {
+  message.info("Uploading...");
+};
+const img = ref(form.value.userAvatar);
+const beforeUpload = async (file: File) => {
+  const res = await UploadControllerService.addUserAvatarUsingPost(file);
+  if (res.code === 0) {
+    //TODO
+    img.value = "http://localhost:9000/api/static/" + res.data;
+  } else {
+    message.error("图片上传失败，" + res.message);
+  }
+};
 </script>
 
 <style scoped>

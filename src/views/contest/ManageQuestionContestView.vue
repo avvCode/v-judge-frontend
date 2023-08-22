@@ -131,6 +131,6 @@ const editorContest = (id: number) => {
 </script>
 
 <style scoped>
-#manageQuestionView {
+#manageQuestionContestView {
 }
 </style>

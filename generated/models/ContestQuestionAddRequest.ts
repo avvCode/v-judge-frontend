@@ -9,6 +9,7 @@ import type { JudgeConfig } from './JudgeConfig';
 export type ContestQuestionAddRequest = {
     answer?: string;
     content?: string;
+    contestId?: number;
     judgeCase?: Array<JudgeCase>;
     judgeConfig?: JudgeConfig;
     rate?: number;

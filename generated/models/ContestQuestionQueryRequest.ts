@@ -5,6 +5,7 @@
 
 export type ContestQuestionQueryRequest = {
     content?: string;
+    contestId?: number;
     current?: number;
     id?: number;
     pageSize?: number;
