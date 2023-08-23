@@ -40,7 +40,7 @@
             :rules="[
               {
                 required: true,
-                message: '请输入时间',
+                message: '请选择时间',
               },
             ]"
           >
@@ -50,6 +50,46 @@
               v-model="rangeValue"
               @ok="onOk"
             />
+          </a-form-item>
+          <a-form-item
+            field="rules"
+            label="比赛规则"
+            :rules="[
+              {
+                required: true,
+                message: '请选择比赛规则',
+              },
+            ]"
+          >
+            <a-select
+              allow-clear
+              style="width: 100px"
+              @change="rulesChange"
+              default-value="0"
+            >
+              <a-option value="0" label="ACM"></a-option>
+              <a-option value="1" label="OI"></a-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item
+            field="type"
+            label="比赛类型"
+            :rules="[
+              {
+                required: true,
+                message: '请选择比赛类型',
+              },
+            ]"
+          >
+            <a-select
+              allow-clear
+              style="width: 100px"
+              @change="typeChange"
+              default-value="0"
+            >
+              <a-option value="0" label="Public"></a-option>
+              <a-option value="1" label="Private"></a-option>
+            </a-select>
           </a-form-item>
           <a-form-item label="比赛状态">
             <a-switch
@@ -164,6 +204,8 @@ let form = ref({
   endTime: "",
   id: 0,
   status: 0,
+  rules: 0,
+  type: 0,
 });
 
 const searchParams = ref({
@@ -272,6 +314,12 @@ const columns = [
     slotName: "optional",
   },
 ];
+const rulesChange = (value: number) => {
+  form.value.rules = value;
+};
+const typeChange = (value: number) => {
+  form.value.type = value;
+};
 </script>
 
 <style scoped>

@@ -30,11 +30,10 @@
 
 #adminLayout .header {
   box-shadow: #eee 1px 1px 5px;
-  margin-bottom: 10px;
 }
 
 #adminLayout .content {
-  background: #fcfcfc;
+  background: #f5f4f4;
   padding: 20px;
 }
 

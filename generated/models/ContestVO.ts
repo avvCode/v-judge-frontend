@@ -6,12 +6,15 @@
 import type { UserVO } from './UserVO';
 
 export type ContestVO = {
+    announcements?: string;
     createTime?: string;
     description?: string;
     endTime?: string;
     id?: number;
+    rules?: number;
     startTime?: string;
     status?: number;
     title?: string;
+    type?: number;
     userVO?: UserVO;
 };

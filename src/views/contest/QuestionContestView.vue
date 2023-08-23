@@ -2,7 +2,7 @@
   <div id="questionContestView">
     <a-row :gutter="20" :style="{ marginBottom: '20px' }">
       <a-card :bordered="true" style="width: 80%; margin: 0 auto"
-        >Contest</a-card
+        >Contest List</a-card
       >
       <a-card
         :bordered="true"
@@ -10,7 +10,20 @@
         v-for="item in dataList"
         :key="item.id"
         :title="item.title"
+        hoverable
       >
+        <template #extra>
+          <a-button type="dashed" size="mini">
+            <icon-exclamation-circle-fill
+              size="20"
+              :style="{ color: '#f53f3f', paddingRight: '10px' }"
+            />
+            END
+          </a-button>
+        </template>
+        <template #title>
+          <a-link href="link" style="color: #0e0e0e">{{ item.title }}</a-link>
+        </template>
         <a-row :gutter="20">
           <a-col span="0">
             <icon-trophy size="50" />
@@ -60,17 +73,6 @@
             <!--              >比赛结束</a-button-->
             <!--            >-->
             <a-button @click="doJoin(item.id)">参加比赛</a-button>
-          </a-col>
-          <a-col span="2" style="text-align: right">
-            <icon-unlock
-              size="50"
-              v-if="
-                moment(Date.now()).diff(moment(item.startTime), 'seconds') >
-                  0 &&
-                moment(Date.now()).diff(moment(item.endTime), 'seconds') <= 0
-              "
-            />
-            <icon-lock size="50" v-else />
           </a-col>
         </a-row>
       </a-card>

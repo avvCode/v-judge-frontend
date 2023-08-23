@@ -10,6 +10,7 @@ export type ContestQuestionVO = {
     acceptedNum?: number;
     content?: string;
     createTime?: string;
+    displayId?: string;
     id?: number;
     judgeConfig?: JudgeConfig;
     rate?: number;

@@ -4,10 +4,13 @@
 /* eslint-disable */
 
 export type ContestAddRequest = {
+    announcements?: string;
     description?: string;
     endTime?: string;
+    rules?: number;
     startTime?: string;
     status?: number;
     title?: string;
+    type?: number;
     userId?: number;
 };

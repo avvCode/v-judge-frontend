@@ -57,6 +57,46 @@
               @ok="onOk"
             />
           </a-form-item>
+          <a-form-item
+            field="rules"
+            label="比赛规则"
+            :rules="[
+              {
+                required: true,
+                message: '请选择比赛规则',
+              },
+            ]"
+          >
+            <a-select
+              allow-clear
+              style="width: 100px"
+              @change="rulesChange"
+              default-value="0"
+            >
+              <a-option value="0" label="ACM"></a-option>
+              <a-option value="1" label="OI"></a-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item
+            field="type"
+            label="比赛类型"
+            :rules="[
+              {
+                required: true,
+                message: '请选择比赛类型',
+              },
+            ]"
+          >
+            <a-select
+              allow-clear
+              style="width: 100px"
+              @change="typeChange"
+              default-value="0"
+            >
+              <a-option value="0" label="Public"></a-option>
+              <a-option value="1" label="Private"></a-option>
+            </a-select>
+          </a-form-item>
           <a-form-item>
             <a-button type="primary" @click="doSubmit">保存</a-button>
           </a-form-item>
@@ -81,6 +121,8 @@ let form = ref({
   description: "",
   startTime: "",
   endTime: "",
+  rules: 0,
+  type: 0,
 });
 const onDescriptionChange = (value: string) => {
   form.value.description = value;
@@ -98,6 +140,12 @@ const doSubmit = async () => {
   } else {
     message.error("保存失败，" + res.message);
   }
+};
+const rulesChange = (value: number) => {
+  form.value.rules = value;
+};
+const typeChange = (value: number) => {
+  form.value.type = value;
 };
 </script>
 

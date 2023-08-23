@@ -10,6 +10,7 @@ export type QuestionVO = {
     acceptedNum?: number;
     content?: string;
     createTime?: string;
+    displayId?: string;
     favourNum?: number;
     hasFavour?: boolean;
     hasThumb?: boolean;

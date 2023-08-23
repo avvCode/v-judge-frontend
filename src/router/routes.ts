@@ -18,6 +18,7 @@ import UpdateQuestionContestView from "@/views/contest/UpdateQuestionContestView
 import AddContestQuestionView from "@/views/contest/question/AddContestQuestionView.vue";
 import AddContestView from "@/views/contest/addContestView.vue";
 import ViewQuestionContestView from "@/views/contest/ViewQuestionContestView.vue";
+import ViewQuestionSubmitView from "@/views/question/submit/ViewQuestionSubmitView.vue";
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/user",
@@ -45,6 +46,16 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       hideInMenu: true,
       access: ACCESS_ENUM.USER,
+    },
+  },
+  {
+    path: "/submit",
+    component: ViewQuestionSubmitView,
+    name: "查看一条提交记录",
+    props: true,
+    meta: {
+      hideInMenu: true,
+      //access: ACCESS_ENUM.USER,
     },
   },
   {

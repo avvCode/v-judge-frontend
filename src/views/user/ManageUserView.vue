@@ -1,59 +1,66 @@
 <template>
   <div id="manageUserView">
-    <a-table
-      :ref="tableRef"
-      :columns="columns"
-      :data="dataList"
-      :pagination="{
-        pageSize: searchParams.pageSize,
-        current: searchParams.current,
-        showTotal: true,
-        total,
-      }"
-      @pageChange="
-        (page) => {
-          searchParams.current = page;
-          loadData();
-        }
-      "
-    >
-      <template #userAvatar="{ record }">
-        <a-avatar
-          :image-url="record.userAvatar"
-          shape="square"
-          size="40"
-        ></a-avatar>
+    <a-card title="User List" style="width: 100%; margin: 0 auto">
+      <template #extra>
+        <a-button type="primary" @click="addUser">
+          <template #icon> <icon-plus /></template>
+        </a-button>
       </template>
-      <template #createTime="{ record }">
-        {{ moment(record.createTime).format("YYYY-MM-DD") }}
-      </template>
-      <template #optional="{ record }">
-        <a-space>
-          <a-button type="primary" @click="handleClick"> 修改</a-button>
-          <a-modal
-            v-model:visible="visible"
-            title="Modal Form"
-            @cancel="handleCancel"
-            @before-ok="handleBeforeOk"
-          >
-            <a-form :model="form">
-              <a-form-item field="name" label="Name">
-                <a-input v-model="form.name" />
-              </a-form-item>
-              <a-form-item field="post" label="Post">
-                <a-select v-model="form.post">
-                  <a-option value="post1">Post1</a-option>
-                  <a-option value="post2">Post2</a-option>
-                  <a-option value="post3">Post3</a-option>
-                  <a-option value="post4">Post4</a-option>
-                </a-select>
-              </a-form-item>
-            </a-form>
-          </a-modal>
-          <a-button status="danger" @click="doDelete(record)">删除</a-button>
-        </a-space>
-      </template>
-    </a-table>
+      <a-table
+        :ref="tableRef"
+        :columns="columns"
+        :data="dataList"
+        :pagination="{
+          pageSize: searchParams.pageSize,
+          current: searchParams.current,
+          showTotal: true,
+          total,
+        }"
+        @pageChange="
+          (page) => {
+            searchParams.current = page;
+            loadData();
+          }
+        "
+      >
+        <template #userAvatar="{ record }">
+          <a-avatar
+            :image-url="record.userAvatar"
+            shape="square"
+            size="40"
+          ></a-avatar>
+        </template>
+        <template #createTime="{ record }">
+          {{ moment(record.createTime).format("YYYY-MM-DD") }}
+        </template>
+        <template #optional="{ record }">
+          <a-space>
+            <a-button type="primary" @click="handleClick"> 修改</a-button>
+            <a-modal
+              v-model:visible="visible"
+              title="Modal Form"
+              @cancel="handleCancel"
+              @before-ok="handleBeforeOk"
+            >
+              <a-form :model="form">
+                <a-form-item field="name" label="Name">
+                  <a-input v-model="form.name" />
+                </a-form-item>
+                <a-form-item field="post" label="Post">
+                  <a-select v-model="form.post">
+                    <a-option value="post1">Post1</a-option>
+                    <a-option value="post2">Post2</a-option>
+                    <a-option value="post3">Post3</a-option>
+                    <a-option value="post4">Post4</a-option>
+                  </a-select>
+                </a-form-item>
+              </a-form>
+            </a-modal>
+            <a-button status="danger" @click="doDelete(record)">删除</a-button>
+          </a-space>
+        </template>
+      </a-table>
+    </a-card>
   </div>
 </template>
 

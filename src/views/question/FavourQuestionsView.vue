@@ -1,6 +1,6 @@
 <template>
-  <div id="favourQuestionsView">
-    <a-form :model="searchParams" :layout="'inline'">
+  <div id="favourQuestionsView" style="background: white">
+    <a-form :model="searchParams" :layout="'inline'" style="padding: 10px">
       <a-form-item field="title" label="名称" style="min-width: 240px">
         <a-input
           v-model="searchParams.title"
@@ -22,7 +22,6 @@
         <a-button type="primary" @click="doSearch">查询</a-button>
       </a-form-item>
     </a-form>
-    <a-divider size="0" />
     <a-table
       :ref="tableRef"
       :columns="columns"
@@ -203,8 +202,7 @@ const doSearch = () => {
 </script>
 
 <style scoped>
-#manageQuestionView {
-  max-width: 1280px;
+#favourQuestionsView {
   margin: 0 auto;
 }
 </style>

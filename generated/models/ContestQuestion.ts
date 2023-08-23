@@ -9,6 +9,7 @@ export type ContestQuestion = {
     content?: string;
     contestId?: number;
     createTime?: string;
+    displayId?: string;
     id?: number;
     isDelete?: number;
     judgeCase?: string;

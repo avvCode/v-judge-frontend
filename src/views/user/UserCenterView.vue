@@ -2,13 +2,19 @@
   <div id="userCenterView">
     <a-row :gutter="20" :style="{ marginBottom: '20px' }">
       <a-col :span="5">
-        <a-card title="个人资料" :bordered="true" :style="{ width: '100%' }">
+        <a-card
+          title="个人资料"
+          hoverable
+          :bordered="true"
+          :style="{ width: '100%' }"
+          class="personal"
+        >
           <template #extra>
             <a-button type="text" @click="edit">
               <template #icon> <icon-edit /></template>
             </a-button>
             <a-modal
-              v-model:visible="visible"
+              v-model:visible="personalVisible"
               title="修改个人信息"
               @cancel="handleCancel"
               @ok="ok"
@@ -91,7 +97,9 @@
               {{ record.questionVO.id }}
             </template>
             <template #title="{ record }">
-              {{ record.questionVO.title }}
+              <a-link href="#" style="color: #0e0e0e">
+                {{ record.questionVO.title }}</a-link
+              >
             </template>
             <template #tags="{ record }">
               <a-space>
@@ -136,6 +144,11 @@
             <template #createTime="{ record }">
               {{ moment(record.createTime).format("YYYY-MM-DD") }}
             </template>
+            <template #optional="{ record }">
+              <a-button type="text" @click="viewSubmit(record.id)"
+                >查看</a-button
+              >
+            </template>
           </a-table>
         </a-card>
       </a-col>
@@ -148,15 +161,17 @@ import { useStore } from "vuex";
 import { onMounted, reactive, ref } from "vue";
 import {
   QuestionSubmitControllerService,
+  QuestionSubmitVO,
   UploadControllerService,
   UserControllerService,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import moment from "moment/moment";
-import { FileItem } from "@arco-design/web-vue";
-import ACCESS_ENUM from "@/access/accessEnum";
+import { useRouter } from "vue-router";
+
 const tableRef = ref();
 const store = useStore();
+const router = useRouter();
 const columns = [
   {
     title: "题号",
@@ -182,6 +197,9 @@ const columns = [
     title: "提交时间",
     slotName: "createTime",
   },
+  {
+    slotName: "optional",
+  },
 ];
 onMounted(() => {
   getMySubmit();
@@ -190,6 +208,7 @@ onMounted(() => {
 const dataList = ref([]);
 const total = ref(0);
 const user = ref({});
+
 const getMySubmit = async () => {
   const res =
     await QuestionSubmitControllerService.listQuestionSubmitByPageUsingPost(
@@ -223,10 +242,20 @@ const searchParams = ref({
   sortOrder: "descend",
 });
 const edit = () => {
-  visible.value = true;
+  personalVisible.value = true;
 };
 
-const visible = ref(false);
+const viewSubmit = (id: number) => {
+  router.push({
+    path: "/submit",
+    query: {
+      id: id,
+    },
+    replace: true,
+  });
+};
+
+const personalVisible = ref(false);
 const form = ref({
   userName: "",
   userProfile: "",
@@ -253,7 +282,7 @@ const handleCancel = async () => {
   if (img.value !== form.value.userAvatar) {
     await UploadControllerService.delUserAvatarUsingPost(img.value);
   }
-  visible.value = false;
+  personalVisible.value = false;
 };
 const toast = () => {
   message.info("Uploading...");
@@ -271,8 +300,7 @@ const beforeUpload = async (file: File) => {
 </script>
 
 <style scoped>
-#manageQuestionView {
-  max-width: 1280px;
+#userCenterView {
   margin: 0 auto;
 }
 </style>

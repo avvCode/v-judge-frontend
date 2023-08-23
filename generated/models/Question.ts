@@ -8,6 +8,7 @@ export type Question = {
     answer?: string;
     content?: string;
     createTime?: string;
+    displayId?: string;
     favourNum?: number;
     id?: number;
     isDelete?: number;

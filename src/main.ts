@@ -6,9 +6,12 @@ import router from "./router";
 import store from "./store";
 import ArcoVueIcon from "@arco-design/web-vue/es/icon";
 import "bytemd/dist/index.css";
+import ECharts from "vue-echarts"; // 引入ECharts
+import "echarts";
 createApp(App)
   .use(ArcoVue)
   .use(store)
   .use(router)
   .use(ArcoVueIcon)
+  .component("Echarts", ECharts)
   .mount("#app");

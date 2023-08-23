@@ -10,6 +10,11 @@
           key="0"
           :style="{ padding: 0, marginRight: '38px' }"
           disabled
+          @click="
+            router.push({
+              path: '/',
+            })
+          "
         >
           <div class="title-bar">
             <img class="logo" src="../assets/logo.png" />
