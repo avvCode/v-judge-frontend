@@ -303,4 +303,21 @@ const beforeUpload = async (file: File) => {
 #userCenterView {
   margin: 0 auto;
 }
+.box {
+  width: 37.6875rem;
+  height: 11.5625rem;
+  p {
+    width: 281px;
+    height: 19px;
+    font-size: 14px;
+    text-align: left;
+    line-height: 20px;
+    color: #777777;
+    margin: 5px 0 10px 21px;
+  }
+}
+.about {
+  width: 37.6875rem;
+  height: 11.5625rem;
+}
 </style>

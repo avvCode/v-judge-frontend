@@ -6,6 +6,7 @@ import router from "./router";
 import store from "./store";
 import ArcoVueIcon from "@arco-design/web-vue/es/icon";
 import "bytemd/dist/index.css";
+import "highlight.js/styles/vs.css";
 import ECharts from "vue-echarts"; // 引入ECharts
 import "echarts";
 createApp(App)

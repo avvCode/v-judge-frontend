@@ -16,6 +16,9 @@ import { languages } from "monaco-editor";
  */
 interface Props {
   value: string;
+  readOnly: boolean;
+  language: string;
+  theme: string;
   handleChange: (v: string) => void;
 }
 
@@ -25,6 +28,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   value: () => "",
   language: () => "java",
+  readOnly: () => false,
+  theme: () => "vs-dark",
   handleChange: (v: string) => {
     console.log(v);
   },
@@ -33,13 +38,6 @@ const props = withDefaults(defineProps<Props>(), {
 const codeEditorRef = ref();
 const codeEditor = ref();
 
-// const fillValue = () => {
-//   if (!codeEditor.value) {
-//     return;
-//   }
-//   // 改变值
-//   toRaw(codeEditor.value).setValue("新的值");
-// };
 watch(
   () => props.language,
   () => {
@@ -48,6 +46,23 @@ watch(
         toRaw(codeEditor.value).getModel(),
         props.language
       );
+    }
+  }
+);
+watch(
+  () => props.readOnly,
+  () => {
+    if (codeEditor.value) {
+      codeEditor.value.setOptions.readOnly = true;
+    }
+  }
+);
+watch(
+  () => props.value,
+  () => {
+    if (codeEditor.value) {
+      console.log("监听value变化");
+      codeEditor.value.content = props.value;
     }
   }
 );
@@ -63,13 +78,13 @@ onMounted(() => {
     automaticLayout: true,
     colorDecorators: true,
     minimap: {
-      enabled: true,
+      enabled: false,
     },
-    readOnly: false,
-    theme: "vs-dark",
-    // lineNumbers: "off",
-    // roundedSelection: false,
-    // scrollBeyondLastLine: false,
+    readOnly: props.readOnly,
+    theme: props.theme,
+    lineNumbers: "off",
+    roundedSelection: false,
+    scrollBeyondLastLine: false,
   });
 
   // 编辑 监听内容变化

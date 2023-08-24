@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import gfm from "@bytemd/plugin-gfm";
-import highlight from "@bytemd/plugin-highlight";
+import highlight from "@bytemd/plugin-highlight-ssr";
 import { Editor, Viewer } from "@bytemd/vue-next";
 import { ref, withDefaults, defineProps } from "vue";
 
