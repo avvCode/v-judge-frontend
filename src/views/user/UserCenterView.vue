@@ -97,7 +97,10 @@
               {{ record.questionVO.id }}
             </template>
             <template #title="{ record }">
-              <a-link href="#" style="color: #0e0e0e">
+              <a-link
+                :href="`/view/question/${record.questionVO.id}`"
+                style="color: #0e0e0e"
+              >
                 {{ record.questionVO.title }}</a-link
               >
             </template>

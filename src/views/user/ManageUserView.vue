@@ -57,6 +57,7 @@
               </a-form>
             </a-modal>
             <a-button status="danger" @click="doDelete(record)">删除</a-button>
+            <a-button status="warning" @click="doBan(record)">封号</a-button>
           </a-space>
         </template>
       </a-table>
@@ -176,17 +177,11 @@ const doDelete = async (user: User) => {
     message.error("删除失败");
   }
 };
+const doBan = async (user: User) => {
+  console.log("封号");
+};
 
 const router = useRouter();
-
-const doUpdate = (question: Question) => {
-  router.push({
-    path: "/update/question",
-    query: {
-      id: question.id,
-    },
-  });
-};
 </script>
 
 <style scoped>

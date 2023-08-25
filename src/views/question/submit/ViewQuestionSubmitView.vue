@@ -5,13 +5,26 @@
         width: 80%;
         margin: 0 auto;
         padding: 0;
-        background: #b6f1c2;
+        background: #eaf6ed;
         font-size: larger;
       "
     >
-      <icon-check-circle-fill :style="{ color: '#26c513' }" />
-      Accept
-      {{ submit?.status }}
+      <a-space>
+        <icon-check-circle-fill
+          size="30"
+          :style="{ color: judgeStatus.color }"
+          v-if="judgeStatus.code === 0"
+        />
+        <icon-close-circle-fill
+          size="30"
+          :style="{ color: judgeStatus.color }"
+          v-else
+        />
+      </a-space>
+      <a-divider direction="vertical" />
+      <a-space>
+        {{ judgeStatus.msg }}
+      </a-space>
     </a-card>
     <a-divider size="0"></a-divider>
     <a-card style="width: 80%; margin: 0 auto; padding: 0">
@@ -21,9 +34,9 @@
         ></template
       >
       <template #extra>
-        <a-space> Time： {{ submit.status }} </a-space>
+        <a-space> Time： {{ submit.status }} ms </a-space>
         <a-divider direction="vertical" />
-        <a-space> Memory： {{ submit.status }} </a-space>
+        <a-space> Memory： {{ submit.status }} MB </a-space>
         <a-divider direction="vertical" />
         <a-space> Language： {{ submit.language }} </a-space>
         <a-divider direction="vertical" />
@@ -44,6 +57,7 @@ import message from "@arco-design/web-vue/es/message";
 import { useRoute } from "vue-router";
 import MdViewer from "@/components/MdViewer.vue";
 import moment from "moment";
+import getStatus from "../../../common/JudgeEnum";
 
 onMounted(() => {
   loadData();
@@ -51,7 +65,11 @@ onMounted(() => {
 const route = useRoute();
 const submit = ref({});
 const code = ref("");
-
+const judgeStatus = ref({
+  code: 0,
+  msg: "",
+  color: "",
+});
 const loadData = async () => {
   const res =
     await QuestionSubmitControllerService.getQuestionSubmitByIdUsingPost(
@@ -61,6 +79,8 @@ const loadData = async () => {
     submit.value = res.data;
     code.value =
       "```" + res.data.language + "\n" + res.data.code + "\n" + "```";
+    judgeStatus.value = getStatus(res.data.status);
+    console.log(judgeStatus.value);
   } else {
     message.error("加载数据失败，" + res.message);
   }
