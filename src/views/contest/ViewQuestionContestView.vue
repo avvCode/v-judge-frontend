@@ -18,6 +18,12 @@
             :data="contestData"
             :pagination="false"
           >
+            <template #type="{ record }">
+              {{ record.type === 0 ? "Private" : "Public" }}
+            </template>
+            <template #rules="{ record }">
+              {{ Object.values(record)[5] === 0 ? "ACM" : "OI" }}
+            </template>
             <template #status="{ record }">
               <a-switch
                 v-model="record.status"
@@ -34,26 +40,25 @@
         <a-card
           :bordered="true"
           style="width: 100%; height: 100%; margin: 0 auto"
+          title="Contest Announcements "
+          v-if="chooseVisible === 2"
+        >
+          <MdViewer
+            :value="form.description"
+            style="padding-left: 16px"
+          ></MdViewer>
+        </a-card>
+        <a-card
+          :bordered="true"
+          style="width: 100%; height: 100%; margin: 0 auto"
           title="Question List"
           v-if="chooseVisible === 3"
         >
           <a-table
             :bordered="false"
             :ref="tableRef"
-            :columns="columns"
-            :data="dataList"
-            :pagination="{
-              pageSize: searchParams.pageSize,
-              current: searchParams.current,
-              showTotal: true,
-              total,
-            }"
-            @pageChange="
-              (page) => {
-                searchParams.current = page;
-                loadData();
-              }
-            "
+            :columns="problemColumns"
+            :data="problemList"
           >
             <template #tags="{ record }">
               <a-space>
@@ -99,20 +104,75 @@
           </a-table>
         </a-card>
         <a-card
+          title="Submissions"
+          v-if="chooseVisible === 4"
           :bordered="true"
           style="width: 100%; height: 100%; margin: 0 auto"
-          title="Contest Announcements "
-          v-if="chooseVisible === 2"
         >
-          <MdViewer
-            :value="form.description"
-            style="padding-left: 16px"
-          ></MdViewer>
+          <a-table
+            :ref="tableRef"
+            :columns="problemSubmitColumns"
+            :data="problemSubmitList"
+            :pagination="{
+              pageSize: searchParams.pageSize,
+              current: searchParams.current,
+              showTotal: true,
+              total: total,
+            }"
+            @pageChange="
+              (page) => {
+                searchParams.current = page;
+                getContestSubmit();
+              }
+            "
+            :bordered="false"
+          >
+            <template #createTime="{ record }">
+              {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+            </template>
+            <template #title="{ record }">
+              {{ record.contestQuestionVO.title }}
+            </template>
+            <template #id="{ record }">
+              <a-link
+                :href="`/view/question/${record.contestQuestionVO.id}`"
+                style="color: #0e0e0e"
+              >
+                {{ record.id }}</a-link
+              >
+            </template>
+            <template #status="{ record }">
+              <a-tag color="magenta" bordered v-if="record.status === 0"
+                >待判题</a-tag
+              >
+              <a-tag color="gold" bordered v-else-if="record.status === 1"
+                >判题中</a-tag
+              >
+              <a-tag color="green" bordered v-else-if="record.status === 2"
+                >成功</a-tag
+              >
+              <a-tag color="magenta" bordered v-else-if="record.status === 3"
+                >失败</a-tag
+              >
+            </template>
+            <template #time="{ record }">
+              {{ record.judgeInfo.time }} ms
+            </template>
+            <template #memory="{ record }">
+              {{ record.judgeInfo.memory }} MB
+            </template>
+            <template #language="{ record }">
+              {{ record.language }}
+            </template>
+            <template #createUser="{ record }">
+              {{ record.userVO.userName }}
+            </template>
+          </a-table>
         </a-card>
         <a-card
           :bordered="true"
           style="width: 100%; height: 100%; margin: 0 auto"
-          v-if="chooseVisible === 4"
+          v-if="chooseVisible === 5"
         >
           <echarts :option="option" :style="{ height: '400px' }"></echarts>
         </a-card>
@@ -125,16 +185,19 @@
         >
           <a-menu-item key="1" @click="chooseVisible = 1">
             OverView
-            <template #icon><icon-home></icon-home></template>
+            <template #icon><icon-home /></template>
           </a-menu-item>
           <a-menu-item key="2" @click="chooseVisible = 2">
             Announcements
-            <template #icon><icon-message></icon-message></template>
+            <template #icon><icon-message /></template>
           </a-menu-item>
           <a-menu-item key="3" @click="chooseVisible = 3">
-            Problems <template #icon><icon-list></icon-list></template
+            Problems <template #icon><icon-list /></template
           ></a-menu-item>
-          <a-menu-item key="4" @click="chooseVisible = 4"
+          <a-menu-item key="4" @click="chooseVisible = 4">
+            Submissions <template #icon><icon-layers /></template
+          ></a-menu-item>
+          <a-menu-item key="5" @click="chooseVisible = 5"
             >Rankings
             <template #icon><icon-bar-chart></icon-bar-chart></template
           ></a-menu-item>
@@ -149,6 +212,7 @@ import { onMounted, ref } from "vue";
 import {
   ContestControllerService,
   ContestQuestionControllerService,
+  ContestQuestionSubmitControllerService,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
@@ -156,11 +220,19 @@ import moment from "moment";
 import MdViewer from "@/components/MdViewer.vue";
 onMounted(() => {
   loadData();
+  getContestSubmit();
 });
 const route = useRoute();
-const dataList = ref([]);
+const problemList = ref([]);
+const problemSubmitList = ref([]);
 const tableRef = ref();
 const router = useRouter();
+
+const total = ref(0);
+
+const checked = ref(0);
+const rangeValue = ref<string[]>([]);
+
 let form = ref({
   title: "",
   description: "",
@@ -175,15 +247,12 @@ let contestData = ref<any>([]);
 const chooseVisible = ref(1);
 
 const searchParams = ref({
-  title: "",
-  tags: [],
+  contestId: route.query.contestId as any,
   pageSize: 10,
   current: 1,
+  sortField: "createTime",
+  sortOrder: "descend",
 });
-const total = ref(0);
-
-const checked = ref(0);
-const rangeValue = ref<string[]>([]);
 
 const loadData = async () => {
   const res = await ContestControllerService.getContestVoByIdUsingGet(
@@ -210,14 +279,25 @@ const loadQuestion = async () => {
       }
     );
   if (res.code === 0) {
-    dataList.value = res.data.records;
-    total.value = res.data.total;
+    problemList.value = res.data.records;
   } else {
     message.error("加载比赛题目信息失败，" + res.message);
   }
 };
+const getContestSubmit = async () => {
+  const res =
+    await ContestQuestionSubmitControllerService.listContestQuestionSubmitByPageUsingPost(
+      searchParams.value
+    );
+  if (res.code === 0) {
+    problemSubmitList.value = res.data.records;
+    total.value = res.data.total;
+  } else {
+    message.error("加载比赛提交信息失败，" + res.message);
+  }
+};
 
-const columns = [
+const problemColumns = [
   {
     title: "题号",
     dataIndex: "id",
@@ -250,6 +330,40 @@ const columns = [
     slotName: "optional",
   },
 ];
+const problemSubmitColumns = [
+  {
+    title: "When",
+    slotName: "createTime",
+  },
+  {
+    title: "Problem",
+    slotName: "title",
+  },
+  {
+    title: "ID",
+    slotName: "id",
+  },
+  {
+    title: "Status",
+    slotName: "status",
+  },
+  {
+    title: "Time",
+    slotName: "time",
+  },
+  {
+    title: "Memory",
+    slotName: "memory",
+  },
+  {
+    title: "Language",
+    slotName: "language",
+  },
+  {
+    title: "Author",
+    slotName: "createUser",
+  },
+];
 const disList = [
   {
     title: "开始时间",
@@ -261,11 +375,11 @@ const disList = [
   },
   {
     title: "比赛类型",
-    dataIndex: "type",
+    slotName: "type",
   },
   {
     title: "比赛规则",
-    dataIndex: "rule",
+    slotName: "rules",
   },
   {
     title: "比赛状态",

@@ -145,7 +145,7 @@
               >
             </template>
             <template #createTime="{ record }">
-              {{ moment(record.createTime).format("YYYY-MM-DD") }}
+              {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
             </template>
             <template #optional="{ record }">
               <a-button type="text" @click="viewSubmit(record.id)"
@@ -305,22 +305,5 @@ const beforeUpload = async (file: File) => {
 <style scoped>
 #userCenterView {
   margin: 0 auto;
-}
-.box {
-  width: 37.6875rem;
-  height: 11.5625rem;
-  p {
-    width: 281px;
-    height: 19px;
-    font-size: 14px;
-    text-align: left;
-    line-height: 20px;
-    color: #777777;
-    margin: 5px 0 10px 21px;
-  }
-}
-.about {
-  width: 37.6875rem;
-  height: 11.5625rem;
 }
 </style>

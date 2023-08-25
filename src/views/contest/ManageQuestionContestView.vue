@@ -8,12 +8,30 @@
       hoverable
     >
       <template #extra>
-        <a-button type="text" size="medium">
+        <a-button v-if="item.status === 3" size="mini" type="text">
           <icon-exclamation-circle-fill
-            size="20"
             :style="{ color: '#f53f3f', paddingRight: '10px' }"
+            size="20"
           />
           END
+        </a-button>
+        <a-button v-else-if="item.status === 2" size="mini" type="text">
+          <icon-exclamation-circle-fill
+            :style="{ color: '#46ec3a', paddingRight: '10px' }"
+            size="20"
+          />
+          ING
+        </a-button>
+        <a-button
+          v-else-if="item.status === 1 || item.status === 0"
+          size="mini"
+          type="text"
+        >
+          <icon-exclamation-circle-fill
+            :style="{ color: '#b2b6b2', paddingRight: '10px' }"
+            size="20"
+          />
+          WAIT
         </a-button>
         <a-divider direction="vertical" />
         <a-button type="primary" size="medium" @click="editorContest(item.id)">
@@ -44,13 +62,24 @@
         </a-col>
         <a-col :span="4">
           <a-countdown
-            title="距离比赛开始"
-            :value="item.startTime"
+            v-if="item.status === 1"
             :now="Date.now()"
+            :value="item.startTime"
             format="D 天 H 时 m 分 s 秒"
+            title="距离比赛开始"
             value-style="color:
             #42b983;font-size: 15px"
           />
+          <a-countdown
+            v-else-if="item.status === 2"
+            :now="Date.now()"
+            :value="item.endTime"
+            format="D 天 H 时 m 分 s 秒"
+            title="距离比赛结束"
+            value-style="color:
+            #42b983;font-size: 15px"
+          />
+          <a-space v-else> 比赛结束 </a-space>
         </a-col>
       </a-row>
     </a-card>

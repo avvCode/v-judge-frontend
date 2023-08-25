@@ -103,7 +103,6 @@ const toMyCenter = () => {
   });
 };
 const toMyFavour = () => {
-  console.log("收藏列表");
   router.push({
     path: "/favour/questions",
     replace: true,
@@ -111,7 +110,10 @@ const toMyFavour = () => {
 };
 
 const toMyContestRecord = () => {
-  console.log("参赛记录");
+  router.push({
+    path: "/view/user/contest",
+    replace: true,
+  });
 };
 
 const logout = async () => {

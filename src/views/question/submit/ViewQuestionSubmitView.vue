@@ -34,9 +34,9 @@
         ></template
       >
       <template #extra>
-        <a-space> Time： {{ submit.status }} ms </a-space>
+        <a-space> Time： {{ submit?.judgeInfo?.time }} ms </a-space>
         <a-divider direction="vertical" />
-        <a-space> Memory： {{ submit.status }} MB </a-space>
+        <a-space> Memory： {{ submit?.judgeInfo?.memory }} MB </a-space>
         <a-divider direction="vertical" />
         <a-space> Language： {{ submit.language }} </a-space>
         <a-divider direction="vertical" />

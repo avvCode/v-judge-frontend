@@ -2,9 +2,29 @@
   <div id="manageUserView">
     <a-card title="User List" style="width: 100%; margin: 0 auto">
       <template #extra>
-        <a-button type="primary" @click="addUser">
+        <a-button type="primary" @click="handleClick">
           <template #icon> <icon-plus /></template>
         </a-button>
+        <a-modal
+          v-model:visible="visible"
+          title="Add User"
+          @cancel="handleCancel"
+          @before-ok="handleBeforeOk"
+        >
+          <a-form :model="form">
+            <a-form-item field="name" label="Name">
+              <a-input v-model="form.name" />
+            </a-form-item>
+            <a-form-item field="post" label="Post">
+              <a-select v-model="form.post">
+                <a-option value="post1">Post1</a-option>
+                <a-option value="post2">Post2</a-option>
+                <a-option value="post3">Post3</a-option>
+                <a-option value="post4">Post4</a-option>
+              </a-select>
+            </a-form-item>
+          </a-form>
+        </a-modal>
       </template>
       <a-table
         :ref="tableRef"
@@ -35,27 +55,6 @@
         </template>
         <template #optional="{ record }">
           <a-space>
-            <a-button type="primary" @click="handleClick"> 修改</a-button>
-            <a-modal
-              v-model:visible="visible"
-              title="Modal Form"
-              @cancel="handleCancel"
-              @before-ok="handleBeforeOk"
-            >
-              <a-form :model="form">
-                <a-form-item field="name" label="Name">
-                  <a-input v-model="form.name" />
-                </a-form-item>
-                <a-form-item field="post" label="Post">
-                  <a-select v-model="form.post">
-                    <a-option value="post1">Post1</a-option>
-                    <a-option value="post2">Post2</a-option>
-                    <a-option value="post3">Post3</a-option>
-                    <a-option value="post4">Post4</a-option>
-                  </a-select>
-                </a-form-item>
-              </a-form>
-            </a-modal>
             <a-button status="danger" @click="doDelete(record)">删除</a-button>
             <a-button status="warning" @click="doBan(record)">封号</a-button>
           </a-space>

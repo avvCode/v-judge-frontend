@@ -16,6 +16,7 @@
             <div class="title">V-Judge</div>
           </div>
         </a-menu-item>
+        <a-menu-item key="/"> 首页 </a-menu-item>
         <a-menu-item :key="visibleRoutes[0].children?.[0].path">
           {{ visibleRoutes[0].children?.[0].name }}
         </a-menu-item>
@@ -110,7 +111,6 @@ const toMyCenter = () => {
   });
 };
 const toMyFavour = () => {
-  console.log("收藏列表");
   router.push({
     path: "/favour/questions",
     replace: true,
@@ -118,9 +118,11 @@ const toMyFavour = () => {
 };
 
 const toMyContestRecord = () => {
-  console.log("参赛记录");
+  router.push({
+    path: "/view/user/contest",
+    replace: true,
+  });
 };
-
 const logout = async () => {
   await UserControllerService.userLogoutUsingPost();
   store.state.user.loginUser = {
