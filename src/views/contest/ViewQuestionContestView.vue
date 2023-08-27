@@ -59,6 +59,18 @@
             :ref="tableRef"
             :columns="problemColumns"
             :data="problemList"
+            :pagination="{
+              pageSize: problemSearchParams.pageSize,
+              current: problemSearchParams.current,
+              showTotal: true,
+              total: problemTotal,
+            }"
+            @pageChange="
+              (page) => {
+                problemSearchParams.current = page;
+                loadQuestion();
+              }
+            "
           >
             <template #tags="{ record }">
               <a-space>
@@ -114,14 +126,14 @@
             :columns="problemSubmitColumns"
             :data="problemSubmitList"
             :pagination="{
-              pageSize: searchParams.pageSize,
-              current: searchParams.current,
+              pageSize: problemSubmitSearchParams.pageSize,
+              current: problemSubmitSearchParams.current,
               showTotal: true,
-              total: total,
+              total: problemSubmitTotal,
             }"
             @pageChange="
               (page) => {
-                searchParams.current = page;
+                problemSubmitSearchParams.current = page;
                 getContestSubmit();
               }
             "
@@ -142,18 +154,9 @@
               >
             </template>
             <template #status="{ record }">
-              <a-tag color="magenta" bordered v-if="record.status === 0"
-                >待判题</a-tag
-              >
-              <a-tag color="gold" bordered v-else-if="record.status === 1"
-                >判题中</a-tag
-              >
-              <a-tag color="green" bordered v-else-if="record.status === 2"
-                >成功</a-tag
-              >
-              <a-tag color="magenta" bordered v-else-if="record.status === 3"
-                >失败</a-tag
-              >
+              <a-tag :color="getStatus(record.status).color">{{
+                getStatus(record.status).msg
+              }}</a-tag>
             </template>
             <template #time="{ record }">
               {{ record.judgeInfo.time }} ms
@@ -175,6 +178,14 @@
           v-if="chooseVisible === 5"
         >
           <echarts :option="option" :style="{ height: '400px' }"></echarts>
+          <a-divider size="0"></a-divider>
+          <a-table
+            :bordered="false"
+            :ref="tableRef"
+            :columns="rankColumns"
+            :data="rankingList"
+          >
+          </a-table>
         </a-card>
       </a-col>
       <a-col :span="6">
@@ -218,9 +229,9 @@ import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
 import moment from "moment";
 import MdViewer from "@/components/MdViewer.vue";
+import getStatus from "@/common/JudgeEnum";
 onMounted(() => {
   loadData();
-  getContestSubmit();
 });
 const route = useRoute();
 const problemList = ref([]);
@@ -228,7 +239,7 @@ const problemSubmitList = ref([]);
 const tableRef = ref();
 const router = useRouter();
 
-const total = ref(0);
+const problemSubmitTotal = ref(0);
 
 const checked = ref(0);
 const rangeValue = ref<string[]>([]);
@@ -246,13 +257,29 @@ let contestData = ref<any>([]);
 
 const chooseVisible = ref(1);
 
-const searchParams = ref({
+const problemSubmitSearchParams = ref({
   contestId: route.query.contestId as any,
   pageSize: 10,
   current: 1,
   sortField: "createTime",
   sortOrder: "descend",
 });
+
+const problemTotal = ref(0);
+const problemSearchParams = ref({
+  contestId: route.query.contestId as any,
+  pageSize: 10,
+  current: 1,
+  sortField: "displayId",
+});
+
+const rankingTotal = ref(0);
+const rankingSearchParams = ref({
+  contestId: route.query.contestId as any,
+  pageSize: 10,
+  current: 1,
+});
+const rankingList = ref([]);
 
 const loadData = async () => {
   const res = await ContestControllerService.getContestVoByIdUsingGet(
@@ -269,17 +296,25 @@ const loadData = async () => {
     message.error("加载比赛信息失败，" + res.message);
   }
   await loadQuestion();
+  await loadContestRanking();
+  await getContestSubmit();
 };
-
 const loadQuestion = async () => {
   const res =
     await ContestQuestionControllerService.listContestQuestionVoByPageUsingPost(
-      {
-        contestId: route.query.contestId as any,
-      }
+      problemSearchParams.value
     );
   if (res.code === 0) {
     problemList.value = res.data.records;
+    problemTotal.value = res.data.total;
+    rankColumns.value = problemList.value.map((item: any) => {
+      return { title: item.displayId, dataIndex: item.displayId };
+    });
+    rankColumns.value.unshift({ title: "TotalTime", dataIndex: "TotalTime" });
+    rankColumns.value.unshift({ title: "AC / Total", dataIndex: "AC/Total" });
+    rankColumns.value.unshift({ title: "Author", dataIndex: "Author" });
+    rankColumns.value.unshift({ title: "#", dataIndex: "#" });
+    console.log(rankColumns);
   } else {
     message.error("加载比赛题目信息失败，" + res.message);
   }
@@ -287,20 +322,42 @@ const loadQuestion = async () => {
 const getContestSubmit = async () => {
   const res =
     await ContestQuestionSubmitControllerService.listContestQuestionSubmitByPageUsingPost(
-      searchParams.value
+      problemSubmitSearchParams.value
     );
   if (res.code === 0) {
     problemSubmitList.value = res.data.records;
-    total.value = res.data.total;
+    problemSubmitTotal.value = res.data.total;
   } else {
     message.error("加载比赛提交信息失败，" + res.message);
   }
 };
 
+const loadContestRanking = async () => {
+  const res =
+    await ContestQuestionSubmitControllerService.getContestRankingUsingPost(
+      rankingSearchParams.value.contestId,
+      rankingSearchParams.value.current,
+      rankingSearchParams.value.pageSize
+    );
+  if (res.code === 0) {
+    rankingTotal.value = res.data.total;
+    let cnt = 1;
+    rankingList.value = res.data.records.map((item: any) => {
+      return {
+        "#": cnt++,
+        Author: item.userName,
+        "AC/Total": `${item.acNum} / ${item.total}`,
+      };
+    });
+  } else {
+    message.error("加载Ranking信息失败，" + res.message);
+  }
+};
+const rankColumns = ref<any>([]);
 const problemColumns = [
   {
     title: "题号",
-    dataIndex: "id",
+    dataIndex: "displayId",
   },
   {
     title: "题目名称",

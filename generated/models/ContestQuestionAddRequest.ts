@@ -10,6 +10,7 @@ export type ContestQuestionAddRequest = {
     answer?: string;
     content?: string;
     contestId?: number;
+    displayId?: string;
     judgeCase?: Array<JudgeCase>;
     judgeConfig?: JudgeConfig;
     rate?: number;

@@ -10,6 +10,7 @@ export type ContestQuestionEditRequest = {
     answer?: string;
     content?: string;
     contestId?: number;
+    displayId?: string;
     id?: number;
     judgeCase?: Array<JudgeCase>;
     judgeConfig?: JudgeConfig;

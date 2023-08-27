@@ -92,6 +92,7 @@
               }
             "
             :bordered="false"
+            :stripe="true"
           >
             <template #id="{ record }">
               {{ record.questionVO.id }}
@@ -114,18 +115,9 @@
               </a-space>
             </template>
             <template #status="{ record }">
-              <a-tag color="magenta" bordered v-if="record.status === 0"
-                >待判题</a-tag
-              >
-              <a-tag color="gold" bordered v-else-if="record.status === 1"
-                >判题中</a-tag
-              >
-              <a-tag color="green" bordered v-else-if="record.status === 2"
-                >成功</a-tag
-              >
-              <a-tag color="magenta" bordered v-else-if="record.status === 3"
-                >失败</a-tag
-              >
+              <a-tag :color="getStatus(record.status).color">{{
+                getStatus(record.status).msg
+              }}</a-tag>
             </template>
             <template #rate="{ record }">
               <a-tag color="green" bordered v-if="record.questionVO.rate === 0"
@@ -161,7 +153,7 @@
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, getCurrentInstance, ref } from "vue";
 import {
   QuestionSubmitControllerService,
   QuestionSubmitVO,
@@ -171,6 +163,7 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import moment from "moment/moment";
 import { useRouter } from "vue-router";
+import getStatus from "@/common/JudgeEnum";
 
 const tableRef = ref();
 const store = useStore();

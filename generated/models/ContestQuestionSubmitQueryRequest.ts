@@ -10,6 +10,7 @@ export type ContestQuestionSubmitQueryRequest = {
     id?: number;
     language?: string;
     pageSize?: number;
+    result?: number;
     sortField?: string;
     sortOrder?: string;
     status?: number;

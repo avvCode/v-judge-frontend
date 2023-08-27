@@ -3,6 +3,23 @@
     <a-card title="Create Problem" style="width: 80%; margin: 0 auto">
       <a-form :model="form" label-align="left">
         <a-form-item
+          field="displayId"
+          label="displayId"
+          :rules="[
+            {
+              required: true,
+              message: '请输入题号',
+            },
+          ]"
+        >
+          <a-input
+            v-model="form.displayId"
+            placeholder="请输入题号"
+            allow-clear
+            style="width: 600px"
+          />
+        </a-form-item>
+        <a-form-item
           field="title"
           label="标题"
           :rules="[
@@ -214,6 +231,7 @@ const answerZIndex = ref(1);
 const route = useRoute();
 
 let form = ref({
+  displayId: "",
   title: "",
   tags: [],
   answer: "",

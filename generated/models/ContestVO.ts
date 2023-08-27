@@ -11,6 +11,7 @@ export type ContestVO = {
     description?: string;
     endTime?: string;
     id?: number;
+    joinNum?: number;
     rules?: number;
     startTime?: string;
     status?: number;

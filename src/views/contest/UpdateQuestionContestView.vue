@@ -257,7 +257,7 @@ const loadQuestion = async () => {
     );
   if (res.code === 0) {
     dataList.value = res.data.records;
-    total.value = res.data.total;
+    total.value = res.data.total as number;
   } else {
     message.error("加载比赛题目信息失败，" + res.message);
   }

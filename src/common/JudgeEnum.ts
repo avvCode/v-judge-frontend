@@ -10,7 +10,7 @@ const getStatus = (status: number) => {
   switch (status) {
     case 0:
       judgeStatus.msg = "Accepted";
-      judgeStatus.color = "#26c513";
+      judgeStatus.color = "#40d52e";
       break;
     case 1:
       judgeStatus.msg = "Wrong Answer";
@@ -18,7 +18,7 @@ const getStatus = (status: number) => {
       break;
     case 2:
       judgeStatus.msg = "Compile Error";
-      judgeStatus.color = "#eec952";
+      judgeStatus.color = "#f8ce4f";
       break;
     case 3:
       judgeStatus.msg = "Memory Limit Exceeded";

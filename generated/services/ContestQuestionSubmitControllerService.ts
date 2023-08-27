@@ -5,6 +5,7 @@
 import type { BaseResponse_ContestQuestionSubmitVO_ } from '../models/BaseResponse_ContestQuestionSubmitVO_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_ContestQuestionSubmitVO_ } from '../models/BaseResponse_Page_ContestQuestionSubmitVO_';
+import type { BaseResponse_Page_ContestRankingVO_ } from '../models/BaseResponse_Page_ContestRankingVO_';
 import type { ContestQuestionSubmitAddRequest } from '../models/ContestQuestionSubmitAddRequest';
 import type { ContestQuestionSubmitQueryRequest } from '../models/ContestQuestionSubmitQueryRequest';
 
@@ -74,6 +75,42 @@ contestQuestionSubmitQueryRequest: ContestQuestionSubmitQueryRequest,
             method: 'POST',
             url: '/api/contest_question_submit/list/page',
             body: contestQuestionSubmitQueryRequest,
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getContestRanking
+     * @param contestId 
+     * @param current 
+     * @param pageSize 
+     * @param sortField 
+     * @param sortOrder 
+     * @returns BaseResponse_Page_ContestRankingVO_ OK
+     * @returns any Created
+     * @throws ApiError
+     */
+    public static getContestRankingUsingPost(
+contestId?: number,
+current?: number,
+pageSize?: number,
+sortField?: string,
+sortOrder?: string,
+): CancelablePromise<BaseResponse_Page_ContestRankingVO_ | any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/contest_question_submit/ranking',
+            query: {
+                'contestId': contestId,
+                'current': current,
+                'pageSize': pageSize,
+                'sortField': sortField,
+                'sortOrder': sortOrder,
+            },
             errors: {
                 401: `Unauthorized`,
                 403: `Forbidden`,

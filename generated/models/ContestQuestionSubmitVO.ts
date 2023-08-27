@@ -15,6 +15,7 @@ export type ContestQuestionSubmitVO = {
     judgeInfo?: JudgeInfo;
     language?: string;
     questionId?: number;
+    result?: number;
     status?: number;
     updateTime?: string;
     userId?: number;
