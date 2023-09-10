@@ -82,7 +82,7 @@ onMounted(() => {
     },
     readOnly: props.readOnly,
     theme: props.theme,
-    lineNumbers: "off",
+    lineNumbers: "on",
     roundedSelection: false,
     scrollBeyondLastLine: false,
   });

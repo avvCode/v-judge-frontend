@@ -23,7 +23,7 @@ questionThumbAddRequest: QuestionThumbAddRequest,
 ): CancelablePromise<BaseResponse_int_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question_thumb/',
+            url: '/api/question/question_thumb/',
             body: questionThumbAddRequest,
             errors: {
                 401: `Unauthorized`,

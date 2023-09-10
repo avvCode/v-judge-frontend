@@ -26,7 +26,7 @@ questionSubmitAddRequest: QuestionSubmitAddRequest,
 ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question_submit/',
+            url: '/api/question/question_submit/',
             body: questionSubmitAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -48,7 +48,7 @@ id?: number,
 ): CancelablePromise<BaseResponse_QuestionSubmitVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question_submit/get',
+            url: '/api/question/question_submit/get',
             query: {
                 'id': id,
             },
@@ -72,7 +72,7 @@ questionSubmitQueryRequest: QuestionSubmitQueryRequest,
 ): CancelablePromise<BaseResponse_Page_QuestionSubmitVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question_submit/list/page',
+            url: '/api/question/question_submit/list/page',
             body: questionSubmitQueryRequest,
             errors: {
                 401: `Unauthorized`,

@@ -13,6 +13,7 @@ export type { BaseResponse_ContestQuestionSubmitVO_ } from './models/BaseRespons
 export type { BaseResponse_ContestQuestionVO_ } from './models/BaseResponse_ContestQuestionVO_';
 export type { BaseResponse_ContestVO_ } from './models/BaseResponse_ContestVO_';
 export type { BaseResponse_int_ } from './models/BaseResponse_int_';
+export type { BaseResponse_List_string_ } from './models/BaseResponse_List_string_';
 export type { BaseResponse_LoginUserVO_ } from './models/BaseResponse_LoginUserVO_';
 export type { BaseResponse_long_ } from './models/BaseResponse_long_';
 export type { BaseResponse_Page_ContestQuestion_ } from './models/BaseResponse_Page_ContestQuestion_';

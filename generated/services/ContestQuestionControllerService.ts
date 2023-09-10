@@ -5,6 +5,7 @@
 import type { BaseResponse_boolean_ } from '../models/BaseResponse_boolean_';
 import type { BaseResponse_ContestQuestion_ } from '../models/BaseResponse_ContestQuestion_';
 import type { BaseResponse_ContestQuestionVO_ } from '../models/BaseResponse_ContestQuestionVO_';
+import type { BaseResponse_List_string_ } from '../models/BaseResponse_List_string_';
 import type { BaseResponse_long_ } from '../models/BaseResponse_long_';
 import type { BaseResponse_Page_ContestQuestion_ } from '../models/BaseResponse_Page_ContestQuestion_';
 import type { BaseResponse_Page_ContestQuestionVO_ } from '../models/BaseResponse_Page_ContestQuestionVO_';
@@ -32,7 +33,7 @@ contestQuestionAddRequest: ContestQuestionAddRequest,
 ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/add',
+            url: '/api/contest/contest_question/add',
             body: contestQuestionAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -54,7 +55,7 @@ deleteRequest: DeleteRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/delete',
+            url: '/api/contest/contest_question/delete',
             body: deleteRequest,
             errors: {
                 401: `Unauthorized`,
@@ -76,7 +77,7 @@ contestQuestionEditRequest: ContestQuestionEditRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/edit',
+            url: '/api/contest/contest_question/edit',
             body: contestQuestionEditRequest,
             errors: {
                 401: `Unauthorized`,
@@ -97,9 +98,32 @@ id?: number,
 ): CancelablePromise<BaseResponse_ContestQuestionVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/contest_question/get',
+            url: '/api/contest/contest_question/get',
             query: {
                 'id': id,
+            },
+            errors: {
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+            },
+        });
+    }
+
+    /**
+     * getAllDisplayId
+     * @param contestId contestId
+     * @returns BaseResponse_List_string_ OK
+     * @throws ApiError
+     */
+    public static getAllDisplayIdUsingGet(
+contestId?: number,
+): CancelablePromise<BaseResponse_List_string_> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/contest/contest_question/get/displays',
+            query: {
+                'contestId': contestId,
             },
             errors: {
                 401: `Unauthorized`,
@@ -120,7 +144,7 @@ id?: number,
 ): CancelablePromise<BaseResponse_ContestQuestion_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/contest_question/get/vo',
+            url: '/api/contest/contest_question/get/vo',
             query: {
                 'id': id,
             },
@@ -144,7 +168,7 @@ contestQuestionQueryRequest: ContestQuestionQueryRequest,
 ): CancelablePromise<BaseResponse_Page_ContestQuestion_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/list/page',
+            url: '/api/contest/contest_question/list/page',
             body: contestQuestionQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -166,7 +190,7 @@ contestQuestionQueryRequest: ContestQuestionQueryRequest,
 ): CancelablePromise<BaseResponse_Page_ContestQuestionVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/list/page/vo',
+            url: '/api/contest/contest_question/list/page/vo',
             body: contestQuestionQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -188,7 +212,7 @@ contestQuestionQueryRequest: ContestQuestionQueryRequest,
 ): CancelablePromise<BaseResponse_Page_ContestQuestionVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/my/list/page/vo',
+            url: '/api/contest/contest_question/my/list/page/vo',
             body: contestQuestionQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -210,7 +234,7 @@ contestQuestionUpdateRequest: ContestQuestionUpdateRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/contest_question/update',
+            url: '/api/contest/contest_question/update',
             body: contestQuestionUpdateRequest,
             errors: {
                 401: `Unauthorized`,

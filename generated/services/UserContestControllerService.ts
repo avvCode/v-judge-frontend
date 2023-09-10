@@ -29,7 +29,7 @@ userContestAddRequest: UserContestAddRequest,
 ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/user_contest/add',
+            url: '/api/contest/user_contest/add',
             body: userContestAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -51,7 +51,7 @@ deleteRequest: DeleteRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/user_contest/delete',
+            url: '/api/contest/user_contest/delete',
             body: deleteRequest,
             errors: {
                 401: `Unauthorized`,
@@ -72,7 +72,7 @@ id?: number,
 ): CancelablePromise<BaseResponse_UserContestVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/user_contest/get/vo',
+            url: '/api/contest/user_contest/get/vo',
             query: {
                 'id': id,
             },
@@ -96,7 +96,7 @@ userContestQueryRequest: UserContestQueryRequest,
 ): CancelablePromise<BaseResponse_Page_UserContestVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/user_contest/list/page/vo',
+            url: '/api/contest/user_contest/list/page/vo',
             body: userContestQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -118,7 +118,7 @@ userContestQueryRequest: UserContestQueryRequest,
 ): CancelablePromise<BaseResponse_Page_UserContestVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/user_contest/my/list/page/vo',
+            url: '/api/contest/user_contest/my/list/page/vo',
             body: userContestQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -140,7 +140,7 @@ userContestUpdateRequest: UserContestUpdateRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/user_contest/update',
+            url: '/api/contest/user_contest/update',
             body: userContestUpdateRequest,
             errors: {
                 401: `Unauthorized`,

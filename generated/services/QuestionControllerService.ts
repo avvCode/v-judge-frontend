@@ -32,7 +32,7 @@ questionAddRequest: QuestionAddRequest,
 ): CancelablePromise<BaseResponse_long_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/add',
+            url: '/api/question/question/add',
             body: questionAddRequest,
             errors: {
                 401: `Unauthorized`,
@@ -54,7 +54,7 @@ deleteRequest: DeleteRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/delete',
+            url: '/api/question/question/delete',
             body: deleteRequest,
             errors: {
                 401: `Unauthorized`,
@@ -76,7 +76,7 @@ questionEditRequest: QuestionEditRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/edit',
+            url: '/api/question/question/edit',
             body: questionEditRequest,
             errors: {
                 401: `Unauthorized`,
@@ -97,7 +97,7 @@ id?: number,
 ): CancelablePromise<BaseResponse_QuestionVO_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/question/get',
+            url: '/api/question/question/get',
             query: {
                 'id': id,
             },
@@ -120,7 +120,7 @@ id?: number,
 ): CancelablePromise<BaseResponse_Question_> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/question/get/vo',
+            url: '/api/question/question/get/vo',
             query: {
                 'id': id,
             },
@@ -144,7 +144,7 @@ questionQueryRequest: QuestionQueryRequest,
 ): CancelablePromise<BaseResponse_Page_Question_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/list/page',
+            url: '/api/question/question/list/page',
             body: questionQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -166,7 +166,7 @@ questionQueryRequest: QuestionQueryRequest,
 ): CancelablePromise<BaseResponse_Page_QuestionVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/list/page/vo',
+            url: '/api/question/question/list/page/vo',
             body: questionQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -188,7 +188,7 @@ questionQueryRequest: QuestionQueryRequest,
 ): CancelablePromise<BaseResponse_Page_QuestionVO_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/my/list/page/vo',
+            url: '/api/question/question/my/list/page/vo',
             body: questionQueryRequest,
             errors: {
                 401: `Unauthorized`,
@@ -210,7 +210,7 @@ questionUpdateRequest: QuestionUpdateRequest,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/question/update',
+            url: '/api/question/question/update',
             body: questionUpdateRequest,
             errors: {
                 401: `Unauthorized`,

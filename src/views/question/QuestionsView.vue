@@ -38,6 +38,7 @@
           loadData();
         }
       "
+      :stripe="true"
     >
       <template #tags="{ record }">
         <a-space>

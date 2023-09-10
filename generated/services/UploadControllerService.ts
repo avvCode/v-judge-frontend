@@ -23,7 +23,7 @@ file?: Blob,
 ): CancelablePromise<BaseResponse_string_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/file/userAvatar/add',
+            url: '/api/user/file/userAvatar/add',
             formData: {
                 'file': file,
             },
@@ -47,7 +47,7 @@ oldPath?: string,
 ): CancelablePromise<BaseResponse_boolean_ | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/file/userAvatar/del',
+            url: '/api/user/file/userAvatar/del',
             query: {
                 'oldPath': oldPath,
             },

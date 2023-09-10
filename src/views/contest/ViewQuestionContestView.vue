@@ -48,149 +48,167 @@
             style="padding-left: 16px"
           ></MdViewer>
         </a-card>
-        <a-card
-          :bordered="true"
-          style="width: 100%; height: 100%; margin: 0 auto"
-          title="Question List"
+
+        <a-table
           v-if="chooseVisible === 3"
+          :bordered="false"
+          :ref="tableRef"
+          :columns="problemColumns"
+          :data="problemList"
+          :pagination="{
+            pageSize: problemSearchParams.pageSize,
+            current: problemSearchParams.current,
+            showTotal: true,
+            total: problemTotal,
+          }"
+          @pageChange="
+            (page) => {
+              problemSearchParams.current = page;
+              loadQuestion();
+            }
+          "
         >
-          <a-table
-            :bordered="false"
-            :ref="tableRef"
-            :columns="problemColumns"
-            :data="problemList"
-            :pagination="{
-              pageSize: problemSearchParams.pageSize,
-              current: problemSearchParams.current,
-              showTotal: true,
-              total: problemTotal,
-            }"
-            @pageChange="
-              (page) => {
-                problemSearchParams.current = page;
-                loadQuestion();
-              }
-            "
-          >
-            <template #tags="{ record }">
-              <a-space>
-                <a-tag v-for="(tag, index) of record.tags" :key="index">{{
-                  tag
-                }}</a-tag>
-              </a-space>
-            </template>
-            <template #acceptedRate="{ record }">
-              {{
-                `${
-                  record.acceptedNum !== 0
-                    ? (record.acceptedNum / record.submitNum) * 100
-                    : "0"
-                }%
-        (${record.acceptedNum} / ${record.submitNum})`
-              }}
-            </template>
-            <template #createUser="{ record }">
-              {{ record.userVO.userName }}
-            </template>
-            <template #createTime="{ record }">
-              {{ moment(record.createTime).format("YYYY-MM-DD") }}
-            </template>
-            <template #rate="{ record }">
-              <a-tag color="green" bordered v-if="record.rate === 0"
-                >简单</a-tag
-              >
-              <a-tag color="gold" bordered v-else-if="record.rate === 1"
-                >中等</a-tag
-              >
-              <a-tag color="magenta" bordered v-else-if="record.rate === 2"
-                >困难</a-tag
-              >
-            </template>
-            <template #optional="{ record }">
-              <a-space>
-                <a-button type="primary" @click="toContestQuestionPage(record)"
-                  >做题</a-button
-                >
-              </a-space>
-            </template>
-          </a-table>
-        </a-card>
-        <a-card
-          title="Submissions"
-          v-if="chooseVisible === 4"
-          :bordered="true"
-          style="width: 100%; height: 100%; margin: 0 auto"
-        >
-          <a-table
-            :ref="tableRef"
-            :columns="problemSubmitColumns"
-            :data="problemSubmitList"
-            :pagination="{
-              pageSize: problemSubmitSearchParams.pageSize,
-              current: problemSubmitSearchParams.current,
-              showTotal: true,
-              total: problemSubmitTotal,
-            }"
-            @pageChange="
-              (page) => {
-                problemSubmitSearchParams.current = page;
-                getContestSubmit();
-              }
-            "
-            :bordered="false"
-          >
-            <template #createTime="{ record }">
-              {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
-            </template>
-            <template #title="{ record }">
-              {{ record.contestQuestionVO.title }}
-            </template>
-            <template #id="{ record }">
-              <a-link
-                :href="`/view/question/${record.contestQuestionVO.id}`"
-                style="color: #0e0e0e"
-              >
-                {{ record.id }}</a-link
-              >
-            </template>
-            <template #status="{ record }">
-              <a-tag :color="getStatus(record.status).color">{{
-                getStatus(record.status).msg
+          <template #tags="{ record }">
+            <a-space>
+              <a-tag v-for="(tag, index) of record.tags" :key="index">{{
+                tag
               }}</a-tag>
-            </template>
-            <template #time="{ record }">
-              {{ record.judgeInfo.time }} ms
-            </template>
-            <template #memory="{ record }">
-              {{ record.judgeInfo.memory }} MB
-            </template>
-            <template #language="{ record }">
-              {{ record.language }}
-            </template>
-            <template #createUser="{ record }">
-              {{ record.userVO.userName }}
-            </template>
-          </a-table>
-        </a-card>
-        <a-card
-          :bordered="true"
-          style="width: 100%; height: 100%; margin: 0 auto"
+            </a-space>
+          </template>
+          <template #acceptedRate="{ record }">
+            {{
+              `${
+                record.acceptedNum !== 0
+                  ? (record.acceptedNum / record.submitNum) * 100
+                  : "0"
+              }%
+        (${record.acceptedNum} / ${record.submitNum})`
+            }}
+          </template>
+          <template #createUser="{ record }">
+            {{ record.userVO.userName }}
+          </template>
+          <template #createTime="{ record }">
+            {{ moment(record.createTime).format("YYYY-MM-DD") }}
+          </template>
+          <template #rate="{ record }">
+            <a-tag color="green" bordered v-if="record.rate === 0">简单</a-tag>
+            <a-tag color="gold" bordered v-else-if="record.rate === 1"
+              >中等</a-tag
+            >
+            <a-tag color="magenta" bordered v-else-if="record.rate === 2"
+              >困难</a-tag
+            >
+          </template>
+          <template #optional="{ record }">
+            <a-space>
+              <a-button type="primary" @click="toContestQuestionPage(record)"
+                >做题</a-button
+              >
+            </a-space>
+          </template>
+        </a-table>
+        <a-table
+          v-if="chooseVisible === 4"
+          :ref="tableRef"
+          :columns="problemSubmitColumns"
+          :data="problemSubmitList"
+          :pagination="{
+            pageSize: problemSubmitSearchParams.pageSize,
+            current: problemSubmitSearchParams.current,
+            showTotal: true,
+            total: problemSubmitTotal,
+          }"
+          @pageChange="
+            (page) => {
+              problemSubmitSearchParams.current = page;
+              getContestSubmit();
+            }
+          "
+          :bordered="false"
+        >
+          <template #createTime="{ record }">
+            {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+          </template>
+          <template #title="{ record }">
+            {{ record.contestQuestionVO.title }}
+          </template>
+          <template #id="{ record }">
+            <a-link
+              :href="`/view/question/${record.contestQuestionVO.id}`"
+              style="color: #0e0e0e"
+            >
+              {{ record.id }}</a-link
+            >
+          </template>
+          <template #status="{ record }">
+            <a-tag :color="getStatus(record.status).color">{{
+              getStatus(record.status).msg
+            }}</a-tag>
+          </template>
+          <template #time="{ record }">
+            {{ record.judgeInfo.time }} ms
+          </template>
+          <template #memory="{ record }">
+            {{ record.judgeInfo.memory }} MB
+          </template>
+          <template #language="{ record }">
+            {{ record.language }}
+          </template>
+          <template #createUser="{ record }">
+            {{ record.userVO.userName }}
+          </template>
+        </a-table>
+        <a-table
+          :ref="tableRef"
+          :columns="rankColumns"
+          :data="rankingList"
+          :bordered="false"
           v-if="chooseVisible === 5"
         >
-          <echarts :option="option" :style="{ height: '400px' }"></echarts>
-          <a-divider size="0"></a-divider>
-          <a-table
-            :bordered="false"
-            :ref="tableRef"
-            :columns="rankColumns"
-            :data="rankingList"
+          <template ##="{ record }">
+            {{ record["#"] }}
+          </template>
+          <template #Author="{ record }">
+            {{ record["Author"] }}
+          </template>
+          <template #ACTotal="{ record }">
+            {{ record["ACTotal"] }}
+          </template>
+          <template #TotalTime="{ record }">
+            {{ record["TotalTime"] }}
+          </template>
+          <template
+            v-for="item in problemDisplayIds"
+            v-slot:[item]="{ record }"
+            :key="item"
           >
-          </a-table>
-        </a-card>
+            <a-space
+              style="background: rgb(51, 204, 153)"
+              v-if="record[item].first"
+            >
+              {{ record[item].totalTime }}
+            </a-space>
+            <a-space
+              style="background: rgb(223, 240, 216)"
+              v-if="record[item].ac && !record[item].first"
+            >
+              {{ record[item].totalTime }}
+            </a-space>
+            <a-space
+              style="background: rgb(242, 222, 222)"
+              v-if="
+                !record[item].ac && !record[item].first && record[item].wrongNum
+              "
+            >
+              -{{ record[item].wrongNum }}
+            </a-space>
+          </template>
+        </a-table>
       </a-col>
       <a-col :span="6">
         <a-menu
-          :style="{ width: '250px', height: '100%' }"
+          :style="{ width: '200px', height: '100%' }"
           :default-open-keys="['1']"
           :default-selected-keys="['1']"
         >
@@ -296,6 +314,7 @@ const loadData = async () => {
     message.error("加载比赛信息失败，" + res.message);
   }
   await loadQuestion();
+  await getRankColumns();
   await loadContestRanking();
   await getContestSubmit();
 };
@@ -307,13 +326,6 @@ const loadQuestion = async () => {
   if (res.code === 0) {
     problemList.value = res.data.records;
     problemTotal.value = res.data.total;
-    rankColumns.value = problemList.value.map((item: any) => {
-      return { title: item.displayId, dataIndex: item.displayId };
-    });
-    rankColumns.value.unshift({ title: "TotalTime", dataIndex: "TotalTime" });
-    rankColumns.value.unshift({ title: "AC / Total", dataIndex: "AC/Total" });
-    rankColumns.value.unshift({ title: "Author", dataIndex: "Author" });
-    rankColumns.value.unshift({ title: "#", dataIndex: "#" });
     console.log(rankColumns);
   } else {
     message.error("加载比赛题目信息失败，" + res.message);
@@ -331,6 +343,24 @@ const getContestSubmit = async () => {
     message.error("加载比赛提交信息失败，" + res.message);
   }
 };
+const problemDisplayIds = ref([] as any);
+const getRankColumns = async () => {
+  const res = await ContestQuestionControllerService.getAllDisplayIdUsingGet(
+    route.query.contestId as any
+  );
+  if (res.code === 0) {
+    problemDisplayIds.value = res.data;
+    rankColumns.value = res.data?.map((item: any) => {
+      return { title: item, slotName: item };
+    });
+    rankColumns.value.unshift({ title: "TotalTime", slotName: "TotalTime" });
+    rankColumns.value.unshift({ title: "AC / Total", slotName: "ACTotal" });
+    rankColumns.value.unshift({ title: "Author", slotName: "Author" });
+    rankColumns.value.unshift({ title: "#", slotName: "#" });
+  } else {
+    message.error("获取比赛列信息失败，" + res.message);
+  }
+};
 
 const loadContestRanking = async () => {
   const res =
@@ -343,11 +373,16 @@ const loadContestRanking = async () => {
     rankingTotal.value = res.data.total;
     let cnt = 1;
     rankingList.value = res.data.records.map((item: any) => {
-      return {
-        "#": cnt++,
-        Author: item.userName,
-        "AC/Total": `${item.acNum} / ${item.total}`,
-      };
+      let arr = {} as any;
+      console.log(item);
+      for (let key in rankColumns.value) {
+        let trueKey = rankColumns.value[key].slotName;
+        arr[trueKey] = item.userContestRankingMap[trueKey];
+      }
+      arr["#"] = cnt++;
+      arr["Author"] = item.userName;
+      arr["ACTotal"] = `${item.acNum} / ${item.total}`;
+      return arr;
     });
   } else {
     message.error("加载Ranking信息失败，" + res.message);
@@ -447,68 +482,6 @@ const disList = [
     dataIndex: "userVO.userName",
   },
 ];
-const option = {
-  title: {
-    text: "Stacked Line",
-  },
-  tooltip: {
-    trigger: "axis",
-  },
-  legend: {
-    data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
-  },
-  grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
-    containLabel: true,
-  },
-  toolbox: {
-    feature: {
-      saveAsImage: {},
-    },
-  },
-  xAxis: {
-    type: "category",
-    boundaryGap: false,
-    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-  },
-  yAxis: {
-    type: "value",
-  },
-  series: [
-    {
-      name: "Email",
-      type: "line",
-      stack: "Total",
-      data: [120, 132, 101, 134, 90, 230, 210],
-    },
-    {
-      name: "Union Ads",
-      type: "line",
-      stack: "Total",
-      data: [220, 182, 191, 234, 290, 330, 310],
-    },
-    {
-      name: "Video Ads",
-      type: "line",
-      stack: "Total",
-      data: [150, 232, 201, 154, 190, 330, 410],
-    },
-    {
-      name: "Direct",
-      type: "line",
-      stack: "Total",
-      data: [320, 332, 301, 334, 390, 330, 320],
-    },
-    {
-      name: "Search Engine",
-      type: "line",
-      stack: "Total",
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-    },
-  ],
-};
 </script>
 
 <style scoped>
