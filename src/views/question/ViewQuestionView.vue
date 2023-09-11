@@ -9,6 +9,9 @@
       v-model:size="size"
       min="80px"
     >
+      <template #resize-trigger-icon>
+        <icon-more-vertical />
+      </template>
       <template #first>
         <a-typography-paragraph>
           <a-tabs default-active-key="question" style="background: white">
@@ -61,6 +64,7 @@
             </a-tab-pane>
             <a-tab-pane key="comment" title="评论"> 评论区 </a-tab-pane>
             <a-tab-pane key="answer" title="题解"> 题解区 </a-tab-pane>
+            <a-tab-pane key="mySubmit" title="提交记录"> 提交记录 </a-tab-pane>
           </a-tabs>
         </a-typography-paragraph>
       </template>
@@ -92,7 +96,11 @@
             theme="vs-white"
           />
           <a-divider size="0"></a-divider>
-          <a-button type="primary" style="min-width: 200px" @click="doSubmit()"
+          <a-button
+            type="primary"
+            style="min-width: 200px"
+            @click="doSubmit()"
+            :loading="submitting"
             >提交代码</a-button
           >
         </a-typography-paragraph>
@@ -163,6 +171,7 @@ const form = ref<QuestionSubmitAddRequest>({
 /**
  * 提交代码
  */
+const submitting = ref(false);
 const doSubmit = async () => {
   if (!question.value?.id) {
     return;
@@ -171,11 +180,13 @@ const doSubmit = async () => {
     ...form.value,
     questionId: question.value.id,
   });
+  submitting.value = true;
   if (res.code === 0) {
     message.success("提交成功");
   } else {
     message.error("提交失败, " + res.message);
   }
+  submitting.value = false;
 };
 
 const changeCode = (value: string) => {

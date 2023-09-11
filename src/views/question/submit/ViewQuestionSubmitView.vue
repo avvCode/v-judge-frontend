@@ -79,8 +79,7 @@ const loadData = async () => {
     submit.value = res.data;
     code.value =
       "```" + res.data.language + "\n" + res.data.code + "\n" + "```";
-    judgeStatus.value = getStatus(res.data.status);
-    console.log(judgeStatus.value);
+    judgeStatus.value = getStatus(res.data.result);
   } else {
     message.error("加载数据失败，" + res.message);
   }

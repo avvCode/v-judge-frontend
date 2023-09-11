@@ -114,9 +114,16 @@
                 >
               </a-space>
             </template>
-            <template #status="{ record }">
-              <a-tag :color="getStatus(record.status).color">{{
-                getStatus(record.status).msg
+
+            <template #status="{ record }"
+              ><a-tag bordered v-if="record.status === 0">待判题</a-tag>
+              <a-tag bordered v-else-if="record.status === 1">判题中</a-tag>
+              <a-tag bordered v-else-if="record.status === 2">成功</a-tag>
+              <a-tag bordered v-else-if="record.status === 3">失败</a-tag>
+            </template>
+            <template #result="{ record }">
+              <a-tag :color="getStatus(record.result).color">{{
+                getStatus(record.result).msg
               }}</a-tag>
             </template>
             <template #rate="{ record }">
@@ -186,8 +193,12 @@ const columns = [
     slotName: "rate",
   },
   {
-    title: "状态",
+    title: "判题状态",
     slotName: "status",
+  },
+  {
+    title: "结果",
+    slotName: "result",
   },
   {
     title: "提交时间",
@@ -288,7 +299,7 @@ const beforeUpload = async (file: File) => {
   const res = await UploadControllerService.addUserAvatarUsingPost(file);
   if (res.code === 0) {
     //TODO
-    img.value = "http://localhost:9000/api/static/" + res.data;
+    img.value = "http://localhost:9000/api/user/static/" + res.data;
   } else {
     message.error("图片上传失败，" + res.message);
   }

@@ -51,7 +51,7 @@
         {{
           `${
             record.acceptedNum !== 0
-              ? (record.acceptedNum / record.submitNum) * 100
+              ? (record.acceptedNum / record.submitNum).toFixed(2) * 100
               : "0"
           }%
         (${record.acceptedNum} / ${record.submitNum})`
